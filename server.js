@@ -15,12 +15,28 @@ app.get("/products", async (req, res) => {
 
 })
 
-app.post("/products", async (req, res) =>{
+app.get('/products', async (req, res) => {
     try {
-        const products = await productManager.addProduct(req.body);
-        res.status(201).json(products)
+        const limit = parseInt(req.query.limit);
+        const minValue = parseInt(req.query.value);
+        
+        if (!isNaN(minValue)) {
+            let products = await productManager.getProducts();
+            products = products.filter(product => product.price > minValue);
+            if (!isNaN(limit)) {
+                products = products.slice(0, limit);
+            }
+            res.status(200).json(products);
+        } else {
+            let products = await productManager.getProducts();
+            if (!isNaN(limit)) {
+                products = products.slice(0, limit);
+            }
+            res.status(200).json(products);
+        }
     } catch (error) {
-        res.status(500).json({msg: error.message});
+        console.error('Error al obtener los productos:', error);
+        res.status(500).json({ error: 'Error interno del servidor.' });
     }
 });
 
