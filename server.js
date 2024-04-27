@@ -1,19 +1,10 @@
 import express from 'express'
-import ProductManager from '../manager/manager.js?'
+import ProductManager from './manager/manager.js'
 
-const productManager = new ProductManager();
+const productManager = new ProductManager("./products.json");
 
 const app = express();
 
-app.get("/products", async (req, res) => {
-    try {
-        const products = await productManager.getProducts();
-        res.status(200).json(products);
-    } catch (error) {
-        res.status(500).json({msg: error.message})
-    }
-
-})
 
 app.get('/products', async (req, res) => {
     try {
@@ -40,17 +31,24 @@ app.get('/products', async (req, res) => {
     }
 });
 
-app.get("/products/pId", async (req,res) =>{
+app.get('/products/:id', async (req, res) => {
     try {
-        const {pId} = req.params;
-        const product = await productManager.getProduct(pId);
-        if (!product) res.status(404).json({msg: "Seguro que ese era el id?"});
-        else res.status(200).json(product)
+        const productId = parseInt(req.params.id); // Convertir ID a número
+        if (isNaN(productId)) {
+            res.status(400).json({ error: 'ID de producto inválido' });
+            return;
+        }
+        const product = await productManager.getProductByID(productId);
+        if (!product) {
+            res.status(404).json({ error: 'Producto no encontrado' });
+        } else {
+            res.status(200).json(product);
+        }
     } catch (error) {
-        res.status(500).json({msg: error.message});
+        console.error('Error al obtener el producto por ID:', error);
+        res.status(500).json({ error: 'Error interno del servidor.' });
     }
 });
-
 
 const PORT = 8080
 

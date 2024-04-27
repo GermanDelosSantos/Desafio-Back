@@ -91,4 +91,33 @@ export default class ProductManager {
     getProduct(idProduct) {
         return this.products.find((product) => product.id === idProduct);
     }
+
+    async getProductByID(id) {
+        try {
+          const product = await this.getProducts();
+          const productExist = product.find((p) => p.id === id);
+          if (!productExist) return null;
+          return productExist;
+        } catch (error) {
+          console.log(error);
+        }
+      }
+
+      async creatProduct(obj) {
+        try {
+          const product = {
+            id: uuidv4(),
+            ...obj,
+          };
+          const products = await this.getProducts();
+          const productExist = products.find((p) => p.title === product.title);
+          if (productExist) return "User already exists";
+          products.push(product);
+          await fs.promises.writeFile(this.path, JSON.stringify(products));
+          return product;
+        } catch (error) {
+          console.log(error);
+        }
+      }
 }
+
