@@ -14,12 +14,19 @@ export default class ProductManager {
         try {
             if (fs.existsSync(this.path)) {
                 const data = fs.readFileSync(this.path, "utf-8");
-                return JSON.parse(data);
-             }
-                 } catch (error) {
-                     console.error("Error al cargar los productos", error);
-                 }
-     }
+                const products = JSON.parse(data);
+                console.log("Productos cargados correctamente:", products);
+                return products;
+            } else {
+                console.error("El archivo no existe en la ruta especificada:", this.path);
+                return [];
+            }
+        } catch (error) {
+            console.error("Error al cargar los productos:", error);
+            return [];
+        }
+    }
+    
 
     async saveProducts() {
         try {
@@ -111,7 +118,7 @@ export default class ProductManager {
           };
           const products = await this.getProducts();
           const productExist = products.find((p) => p.title === product.title);
-          if (productExist) return "User already exists";
+          if (productExist) return "Product already exist";
           products.push(product);
           await fs.promises.writeFile(this.path, JSON.stringify(products));
           return product;
