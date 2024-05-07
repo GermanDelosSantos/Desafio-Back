@@ -37,33 +37,32 @@ export default class ProductManager {
         }
     }   
 
-    updateProduct(productId, updatedFields) {
-        const updatedProducts = this.products.map((product) => {
-            if (product.id === productId) {
-                 return { ...product, ...updatedFields };
-                 } else {
-                return product;
-            }
-        });
-
-        this.products = updatedProducts;
-
-        this.saveProducts();
-
-        console.log("Producto actualizado correctamente");
-
-    }
-
-    deleteProduct(productId) {
-        const index = this.products.findIndex((product) => product.id === productId);
-        if (index !== -1) {
-            this.products.splice(index, 1);
-            this.saveProducts();
-            console.log("Producto eliminado correctamente");
-        } else {
-            console.log("No se encontró ningún producto con el ID proporcionado");
+    async updateProduct(obj, id) {
+        try {
+          const products = await this.getProducts();
+          let productExist = await this.getProductByID(id);
+          if (!productExist) return null;
+          productExist = { ...productExist, ...obj };
+          const newArray = products.filter((u) => u.id !== id);
+          newArray.push(productExist)
+          await fs.promises.writeFile(this.path, JSON.stringify(newArray));
+          return productExist;
+        } catch (error) {
+          console.log(error);
         }
-    }
+      }
+
+      async deleteProduct(id) {
+        const products = await this.getProducts();
+        if (products.length > 0) {
+          const productExist = await this.getProductByID(id);
+          if (productExist) {
+            const newArray = products.filter((u) => u.id !== id);
+            await fs.promises.writeFile(this.path, JSON.stringify(newArray));
+            return productExist
+          } 
+        } else return null
+      }
 
     addProduct(title, description, price, thumbnail, stock, code) {
         if (!title || !description || !price || !thumbnail || !stock || !code) {
