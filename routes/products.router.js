@@ -1,13 +1,24 @@
 import { Router } from "express";
-const router = Router();
-
 import { __dirname } from "../utils.js";
-
+import { productValidator } from "../midlewares/productValidator.js";
 import ProductManager from "../manager/manager.js";
+import express from 'express'
+import handlebars from 'express-handlebars'
+
+
+const app = express();
+
+
+app.engine("handlebars", handlebars.engine());
+app.set("view engine", "handlebars");
+app.set("views", __dirname + "/views");
+
+
+const router = Router();
 const productManager = new ProductManager(`${__dirname}/db/products.json`);
 
 
-import { productValidator } from "../midlewares/productValidator.js";
+
 
 router.get("/", async (req, res, next) => {
   try {
@@ -69,12 +80,8 @@ router.delete("/", async (req, res) => {
     res.status(500).json({msg: error.message});  }
 });
 
-router.get('/realtimeproducts', async (req, res) => {
-  try {
-    res.render('websocket')
-  } catch (error) {
-    res.status(500).json({msg: error.message})
-  }
-});
+app.get('/realtimeproducts', (req, res)=>{
+  res.render('websocket')
+})
 
 export default router;
