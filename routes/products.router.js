@@ -69,4 +69,12 @@ router.delete("/", async (req, res) => {
     res.status(500).json({msg: error.message});  }
 });
 
+router.get('/realtimeproducts', async (req, res) => {
+  try {
+    res.render('websocket')
+  } catch (error) {
+    res.status(500).json({msg: error.message})
+  }
+});
+
 export default router;
