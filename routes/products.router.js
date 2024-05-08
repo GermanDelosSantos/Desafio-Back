@@ -4,7 +4,7 @@ const router = Router();
 import { __dirname } from "../utils.js";
 
 import ProductManager from "../manager/manager.js";
-const productManager = new ProductManager(`${__dirname}\\db\\products.json`);
+const productManager = new ProductManager(`${__dirname}/db/products.json`);
 
 
 import { productValidator } from "../midlewares/productValidator.js";
