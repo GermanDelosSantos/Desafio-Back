@@ -80,8 +80,8 @@ router.delete("/", async (req, res) => {
     res.status(500).json({msg: error.message});  }
 });
 
-app.get('/realtimeproducts', (req, res)=>{
-  res.render('websocket')
-})
+// app.get('/realtimeproducts', (req, res)=>{
+//   res.render('websocket')
+// })
 
 export default router;

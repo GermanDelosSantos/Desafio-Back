@@ -17,10 +17,11 @@ form.onsumbit = (e) =>{
     socketClient.emit('newProduct', product);
 }
 
-socketClient.on('products', (myArray) =>{
-    let infoProducts = '';
-    myArray.map((prod) =>{
-        infoProducts =+ `${prod.name} $${prod.price}`
+const infoProducts = [];
+
+socketClient.on('products', (myArray) => {
+    myArray.forEach((prod) => {
+        infoProducts.push(`${prod.name} - $${prod.price}`);
     });
-    products.innerHtml = infoProducts;
-})
+    products.innerHTML = infoProducts.join('<br>');
+});
