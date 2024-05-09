@@ -8,7 +8,6 @@ import handlebars from 'express-handlebars'
 
 const app = express();
 
-
 app.engine("handlebars", handlebars.engine());
 app.set("view engine", "handlebars");
 app.set("views", __dirname + "/views");
@@ -16,8 +15,6 @@ app.set("views", __dirname + "/views");
 
 const router = Router();
 const productManager = new ProductManager(`${__dirname}/db/products.json`);
-
-
 
 
 router.get("/", async (req, res, next) => {

@@ -2,6 +2,7 @@ import express from 'express'
 import ProductManager from './manager/manager.js'
 import cartRouter from './routes/cart.router.js'
 import productRouter from './routes/products.router.js'
+import viewsRouter from './routes/view.router.js'
 import { __dirname } from './utils.js'
 import { errorHandler } from './midlewares/errorHandler.js'
 import handlebars from 'express-handlebars'
@@ -17,12 +18,13 @@ app.engine("handlebars", handlebars.engine());
 app.set("view engine", "handlebars");
 app.set("views", __dirname + "/views");
 
-app.use('/api/carts', cartRouter)
-app.use('/api/products', productRouter)
+app.use('/api/carts', cartRouter);
+app.use('/api/products', productRouter);
+app.use('/realtimeproducts', viewsRouter);
 
-app.get('/realtimeproducts', (req, res)=>{
-    res.render('websocket')
-  })
+// app.get('/realtimeproducts', (req, res)=>{
+//     res.render('websocket')
+//   })
 
 app.use(errorHandler);
 
