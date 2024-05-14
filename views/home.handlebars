@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+</head>
+<body>
+    <h1>Productos</h1>
+    {{#if products.length}}
+        <ul class="ulProducts">
+            {{#each products}}
+                <li>{{this.name}} - ${{this.price}}</li>
+            {{/each}}
+        </ul>
+    {{else}}
+        <p>No existe ningun producto</p>
+    {{/if}}
+</body>
+</html>

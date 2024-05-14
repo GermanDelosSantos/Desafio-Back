@@ -1,9 +1,17 @@
 import { Router } from "express";
 
-const router = Router();
+const router = (products) => {
+    const route = Router();
 
-router.get('/', (req, res) => {
-    res.render('websocket')
-});
+    route.get('/home', (req, res) => {
+        res.render('home', { products });
+    });
 
-export default router
+    route.get('/realtimeproducts', (req, res) => {
+        res.render('websocket');
+    });
+
+    return route;
+};
+
+export default router;
