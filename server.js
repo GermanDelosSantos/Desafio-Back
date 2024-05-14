@@ -7,6 +7,9 @@ import { __dirname } from './utils.js'
 import { errorHandler } from './midlewares/errorHandler.js'
 import handlebars from 'express-handlebars'
 import { Server } from 'socket.io'
+import { v4 as uuidv4} from 'uuid'
+
+
 
 const app = express();
 const products = []
@@ -47,6 +50,7 @@ socketServer.on('connection', (socket) => {
     })
 
     socket.on('newProduct', (prod) => {
+        prod.id = uuidv4();
         products.push(prod);
         socketServer.emit('products', products);
     });
@@ -60,5 +64,14 @@ socketServer.on('connection', (socket) => {
             console.log(`productos existentes ${prod}`);
         }
     })
+    socket.on('deleteProduct', (productId) => {
+        const index = products.findIndex(product => product.id === productId);
+        if (index !== -1) {
+            products.splice(index, 1);
+            socketServer.emit('products', products);
+        } else {
+            console.log(`Producto con ID ${productId} no encontrado`);
+        }
+    });
 });
 
