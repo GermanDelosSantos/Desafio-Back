@@ -1,26 +1,33 @@
 
-<div id="divForm">
-
-    <form id="form">
+<div id="box-container">
+    <div>
+            <form id="form">
     <p>Agregar productos</p>
     <placeholder>name</placeholder><label for="Product:"></label><input type="text" name="name" id="name">
     <placeholder>price</placeholder><label for="Price:"></label><input type="number" name="price" id="price">
-    <input type="submit" value="SEND">
+    <button type="submit" value="SEND" class="agregarBtn">Agregar Producto</button>
 </form>
-</div>
+    </div>
 
 <div>
 <p id="products"></p>
 
 </div>
 
-    <div>
-        <form id="deleteProductForm">
+
+    <div id="divDelete">
+        <form id="deleteProductForm" class="deleteForm">
             <label for="productId">Product ID:</label>
             <input type="text" id="productId" name="productId" required>
-            <button type="submit">Delete Product</button>
+            <button type="submit" class="deleteBtn">Eliminar Producto</button>
         </form>
     </div>
+</div>
+
+
+
+
+
     
 <script src="/socket.io/socket.io.js"></script>
 <script src="js/index.js"></script>

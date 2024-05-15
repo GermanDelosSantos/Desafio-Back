@@ -7,6 +7,10 @@
 body{
     background-color: rgba(183, 118, 182, 0.833);
 }
+#box-container{
+    display: flex;
+    justify-content: space-between;
+}
 
 #divForm{
     display: flex;
@@ -18,12 +22,54 @@ body{
     font-size: 1.2rem;
     color: rgb(192, 13, 13);
 }
+
 #form{
-    width: 25%;
     display: flex;
     flex-direction:column;
     padding: 0.5rem;
     margin: 0.7rem;
+    font-family: sans-serif;
+    font-size: 1.2rem;
+    color: rgb(192, 13, 13);
+}
+.agregarBtn{
+    background-color: rgba(14, 99, 10, 0.91);
+    color: #0d0d0d;
+    border-radius: 15%;
+    margin: 0.4rem;
+    padding: 0.6rem;
+    box-shadow: 5px 5px 5px 0px #191919;
+    border: 2px solid #07d818;
+    font-family: sans-serif;
+    font-size: 1.2rem;
+}
+
+#divDelete{
+    margin: 1rem;
+    position: relative;
+    top: 3rem;
+    right: 3rem;    
+}
+
+.deleteForm{
+    color: rgb(192, 13, 13);
+    font-family: sans-serif;
+    font-size: 1.2rem;
+
+}
+
+.deleteBtn{
+    background-color: rgba(99, 10, 10, 0.91);
+    color: #eeee;
+    width: 25%;
+    height: 35%;
+    border-radius: 15%;
+    margin: 0.4rem;
+    padding: 0.6rem;
+    box-shadow: 5px 5px 5px 0px #191919;
+    border: 2px solid #f60303;
+    font-family: sans-serif;
+    font-size: 1rem;
 }
 
 h1{
@@ -34,21 +80,20 @@ h1{
     
 }
 
-p{
+#products{
     font-size: 1.5rem;
     color: rgb(241, 5, 5);
     font-family: sans-serif;
     text-align: center;
-    padding: 0.5rem;
-    margin: 0.7rem;
+    padding: 1.5rem;
+    margin: 1rem;
 
 }
 .ulProducts{
     text-align: center;
-    font-size: 1.5rem;
-    color: rgb(241, 5, 5);
     font-family: sans-serif;
     margin: 0.7rem;
     padding: 0.5rem;
     list-style: none;
 }
+
