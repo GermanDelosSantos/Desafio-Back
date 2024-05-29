@@ -1,5 +1,5 @@
+import './daos/mongodb/connection.js';
 import express from 'express'
-import ProductManager from './manager/manager.js'
 import cartRouter from './routes/cart.router.js'
 import productRouter from './routes/products.router.js'
 import createViewsRouter from './routes/view.router.js';
@@ -7,7 +7,10 @@ import { __dirname } from './utils.js'
 import { errorHandler } from './midlewares/errorHandler.js'
 import handlebars from 'express-handlebars'
 import { Server } from 'socket.io'
+import morgan from 'morgan';
+import 'dotenv/config'
 import { v4 as uuidv4} from 'uuid'
+import './db/database.js';
 
 
 
@@ -17,6 +20,7 @@ const products = []
 app.use(express.static(__dirname + '/public'))
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
+app.use(morgan('dev'));
 
 app.engine("handlebars", handlebars.engine());
 app.set("view engine", "handlebars");
