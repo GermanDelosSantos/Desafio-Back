@@ -1,4 +1,4 @@
-import './daos/mongodb/connection.js';
+import { initMongoDB } from './daos/mongodb/connection.js';
 import express from 'express'
 import cartRouter from './routes/cart.router.js'
 import productRouter from './routes/products.router.js'
@@ -40,6 +40,7 @@ app.use(errorHandler);
 
 const PORT = 8080
 
+initMongoDB();
 
 
 const httpServer = app.listen(PORT, ()=> console.log((`Puert ok on ${PORT}`)));
