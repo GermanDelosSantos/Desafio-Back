@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import 'dotenv/config'
 
-const MONGO_URL = process.env.MONGO_URL
+const MONGO_URL = 'mongodb+srv://noiconuf:admin@cluster0.qu7hol7.mongodb.net/coderBack?retryWrites=true&w=majority&appName=Cluster0' 
 
 export const initMongoDB = async () => {
   try {

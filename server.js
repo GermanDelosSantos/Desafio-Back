@@ -11,6 +11,7 @@ import morgan from 'morgan';
 import 'dotenv/config'
 import { v4 as uuidv4} from 'uuid'
 import './db/database.js';
+import * as messageService from './service/message.services.js';
 
 
 
@@ -33,7 +34,10 @@ const viewsRouter = createViewsRouter(products);
 
 app.use('/', viewsRouter);
 
-
+app.get('/chatwebsocket', async (req, res) => {
+    const messages = await messageService.getAll();
+    res.render('chat', { messages });
+  });
 
 
 app.use(errorHandler);
@@ -78,5 +82,12 @@ socketServer.on('connection', (socket) => {
             console.log(`Producto con ID ${productId} no encontrado`);
         }
     });
+
+    socket.on('newMessage', async (msg) => {
+        await messageService.create(msg);
+        const messages = await messageService.getAll();
+        socket.emit('messages', messages);
+      });
+
 });
 
