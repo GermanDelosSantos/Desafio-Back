@@ -34,10 +34,7 @@ const viewsRouter = createViewsRouter(products);
 
 app.use('/', viewsRouter);
 
-app.get('/chatwebsocket', async (req, res) => {
-    const messages = await messageService.getAll();
-    res.render('chat', { messages });
-  });
+
 
 
 app.use(errorHandler);
@@ -83,11 +80,20 @@ socketServer.on('connection', (socket) => {
         }
     });
 
-    socket.on('newMessage', async (msg) => {
+    socket.on('newUser', (user) => {
+        console.log(`> ${user} ha iniciado sesión`);
+        socket.broadcast.emit('newUser', user);
+    });
+
+    socket.on('chat:message', async (msg) => {
         await messageService.create(msg);
         const messages = await messageService.getAll();
-        socket.emit('messages', messages);
-      });
+        socketServer.emit('messages', messages);
+    });
+
+    socket.on('chat:typing', (username) => {
+        socket.broadcast.emit('chat:typing', username);
+    });
 
 });
 

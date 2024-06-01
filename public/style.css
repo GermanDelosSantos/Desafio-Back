@@ -97,3 +97,51 @@ h1{
     list-style: none;
 }
 
+#chat-container{
+    max-width: 600px;
+    margin: 30px auto;
+    border: 1px solid #ddd;
+    box-shadow: 1px 3px 5px rgba(0, 0, 0, .5);
+    background-color: #cc5a93ee;
+}
+#chat-window{
+    padding: 14px 0; 
+    margin: 0 20px;
+    border-bottom: 1px solid #e9e9e9;
+    color: #f8f8f8;
+}
+#output p{
+    color: #020202;
+    padding: 14px 0;
+    margin: 0 20px;
+}
+#actions p{
+    padding: 14px;
+    margin: 0 20px;
+    border-bottom: 1px solid #e9e9e9;
+    color: #555;
+}
+input{
+    padding: 10px 20px;
+    box-sizing: border-box;
+    border: 0;
+    background: #eee;
+    display: block;
+    width: 100%;
+}
+button{
+    background-color: rgba(14, 99, 10, 0.91);
+     color: #0d0d0d;
+    font-size: 19px;
+    padding: 12px 0;
+    width: 100%;
+    cursor: pointer;
+    box-shadow: 5px 5px 5px 0px #191919;
+    border: 2px solid #07d818;
+    font-family: sans-serif;
+    transition: ease-in-out 0.2ms;
+}
+button:hover{
+    background: #1ed106;
+    transition: ease-in-out 0.2ms;
+}
