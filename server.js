@@ -1,3 +1,6 @@
+import EventEmitter from 'events';
+EventEmitter.defaultMaxListeners = 20;
+
 import { initMongoDB } from './daos/mongodb/connection.js';
 import express from 'express'
 import cartRouter from './routes/cart.router.js'
@@ -12,11 +15,11 @@ import 'dotenv/config'
 import { v4 as uuidv4} from 'uuid'
 import './db/database.js';
 import * as messageService from './service/message.services.js';
+import * as productService from './service/product.services.js';
 
 
 
 const app = express();
-const products = []
 
 app.use(express.static(__dirname + '/public'))
 app.use(express.json())
@@ -30,7 +33,7 @@ app.set("views", __dirname + "/views");
 app.use('/api/carts', cartRouter);
 app.use('/api/products', productRouter);
 
-const viewsRouter = createViewsRouter(products);
+const viewsRouter = createViewsRouter();
 
 app.use('/', viewsRouter);
 
@@ -55,13 +58,19 @@ socketServer.on('connection', (socket) => {
         console.log(`Usuario desconectado`)
     })
 
-    socket.on('newProduct', (prod) => {
-        prod.id = uuidv4();
-        products.push(prod);
-        socketServer.emit('products', products);
-    });
+    socket.on('newProduct', async (prod) => {
+        try {
+            const newProduct = await productService.create(prod);
+            const products = await productService.getAll();
+            socketServer.emit('products', products);
+        } catch (error) {
+            console.error(`Error al agregar producto: ${error.message}`);
+            console.log(products);
 
-    socket.emit('products', products);
+        }
+    });
+     const products = productService.getAll();
+    socket.broadcast.emit('products',products)
     
     socket.on('productExist', (prod) =>{
         if (prod.length === 0){
@@ -70,13 +79,13 @@ socketServer.on('connection', (socket) => {
             console.log(`productos existentes ${prod}`);
         }
     })
-    socket.on('deleteProduct', (productId) => {
-        const index = products.findIndex(product => product.id === productId);
-        if (index !== -1) {
-            products.splice(index, 1);
+    socket.on('deleteProduct', async (productId) => {
+        try {
+            await productService.remove(productId);
+            const products = await productService.getAll();
             socketServer.emit('products', products);
-        } else {
-            console.log(`Producto con ID ${productId} no encontrado`);
+        } catch (error) {
+            console.error(`Error al eliminar producto: ${error.message}`);
         }
     });
 

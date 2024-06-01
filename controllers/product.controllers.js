@@ -22,11 +22,16 @@ export const getById = async (req, res, next) => {
 
 export const create = async (req, res, next) => {
   try {
-    const newProd = await service.create(req.body);
-    if(!newProd) res.status(404).json({msg: 'Error creating product'});
-    else res.json(newProd);
+    const { name, description, price, stock } = req.body;
+    const newProduct = await productService.create({
+      name,
+      description,
+      price,
+      stock
+    });
+    res.json(newProduct);
   } catch (error) {
-    next(error.message);
+    next(error);
   }
 };
 

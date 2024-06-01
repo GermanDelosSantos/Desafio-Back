@@ -5,6 +5,9 @@ document.addEventListener('DOMContentLoaded', () => {
   if (form) {
       const inputName = document.getElementById('name');
       const inputPrice = document.getElementById('price');
+      const inputDescription = document.getElementById('description');
+      const inputStock = document.getElementById('stock');
+
       const products = document.getElementById('products');
       const addedProducts = document.getElementById('productsAdded');
       const deleteForm = document.getElementById('deleteProductForm');
@@ -14,20 +17,24 @@ document.addEventListener('DOMContentLoaded', () => {
           e.preventDefault();
           const name = inputName.value;
           const price = inputPrice.value;
+          const description = inputDescription.value;
+          const stock = inputStock.value
           const product = {
               name,
-              price
+              price,
+              description,
+              stock
           };
           socket.emit('newProduct', product);
       };
 
       socket.on('products', (arrayProducts) => {
-          let infoProducts = '';
-          arrayProducts.forEach((prod) => {
-              infoProducts += `${prod.id}: ${prod.name} - $${prod.price} <br>`;
-          });
-          products.innerHTML = infoProducts;
-      });
+        let infoProducts = '';
+        arrayProducts.forEach((prod) => {
+            infoProducts += `<div>${prod._id}: ${prod.name} - $${prod.price} - ${prod.description} - ${prod.stock}</div>`;
+        });
+        products.innerHTML = infoProducts;
+    });
 
       socket.on('productExist', (prod) => { 
           if (prod.length === 0) {
