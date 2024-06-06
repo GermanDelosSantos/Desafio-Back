@@ -1,57 +1,57 @@
 document.addEventListener('DOMContentLoaded', () => {
   const socket = io();
 
-  const form = document.getElementById('form');
-  if (form) {
-      const inputName = document.getElementById('name');
-      const inputPrice = document.getElementById('price');
-      const inputDescription = document.getElementById('description');
-      const inputStock = document.getElementById('stock');
+//   const form = document.getElementById('form');
+//   if (form) {
+//       const inputName = document.getElementById('name');
+//       const inputPrice = document.getElementById('price');
+//       const inputDescription = document.getElementById('description');
+//       const inputStock = document.getElementById('stock');
 
-      const products = document.getElementById('products');
-      const addedProducts = document.getElementById('productsAdded');
-      const deleteForm = document.getElementById('deleteProductForm');
-      const deleteProductIdInput = document.getElementById('productId');
+//       const products = document.getElementById('products');
+//       const addedProducts = document.getElementById('productsAdded');
+//       const deleteForm = document.getElementById('deleteProductForm');
+//       const deleteProductIdInput = document.getElementById('productId');
 
-      form.onsubmit = (e) => {
-          e.preventDefault();
-          const name = inputName.value;
-          const price = inputPrice.value;
-          const description = inputDescription.value;
-          const stock = inputStock.value
-          const product = {
-              name,
-              price,
-              description,
-              stock
-          };
-          socket.emit('newProduct', product);
-      };
+//       form.onsubmit = (e) => {
+//           e.preventDefault();
+//           const name = inputName.value;
+//           const price = inputPrice.value;
+//           const description = inputDescription.value;
+//           const stock = inputStock.value
+//           const product = {
+//               name,
+//               price,
+//               description,
+//               stock
+//           };
+//           socket.emit('newProduct', product);
+//       };
 
-      socket.on('products', (arrayProducts) => {
-        let infoProducts = '';
-        arrayProducts.forEach((prod) => {
-            infoProducts += `<div>${prod._id}: ${prod.name} - $${prod.price} - ${prod.description} - ${prod.stock}</div>`;
-        });
-        products.innerHTML = infoProducts;
-    });
+//       socket.on('products', (arrayProducts) => {
+//         let infoProducts = '';
+//         arrayProducts.forEach((prod) => {
+//             infoProducts += `<div>${prod._id}: ${prod.name} - $${prod.price} - ${prod.description} - ${prod.stock}</div>`;
+//         });
+//         products.innerHTML = infoProducts;
+//     });
 
-      socket.on('productExist', (prod) => { 
-          if (prod.length === 0) {
-              addedProducts.innerHTML = `No existe ningun producto`;
-          } else {
-              addedProducts.innerHTML = `Productos existentes: ${prod}`;
-          }
-      });
+//       socket.on('productExist', (prod) => { 
+//           if (prod.length === 0) {
+//               addedProducts.innerHTML = `No existe ningun producto`;
+//           } else {
+//               addedProducts.innerHTML = `Productos existentes: ${prod}`;
+//           }
+//       });
 
-      if (deleteForm) {
-          deleteForm.onsubmit = (e) => {
-              e.preventDefault();
-              const productId = deleteProductIdInput.value;
-              socket.emit('deleteProduct', productId);
-          };
-      }
-  }
+//       if (deleteForm) {
+//           deleteForm.onsubmit = (e) => {
+//               e.preventDefault();
+//               const productId = deleteProductIdInput.value;
+//               socket.emit('deleteProduct', productId);
+//           };
+//       }
+//   }
 
   let username = null;
   if (!username) {

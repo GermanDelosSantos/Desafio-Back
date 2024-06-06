@@ -1,12 +1,16 @@
 import { ProductModel } from "./models/product.model.js";
 
+
+
 export default class ProductDaoMongoDB {
-  async getAll() {
+  async getAll(page = 1, limit = 10, name, sort) {
     try {
-      const response = await ProductModel.find({});
-      return response;
+      const filter = name ? { 'name': name } : {};
+      let sortOrder = {};
+      if(sort) sortOrder.price = sort === 'asc' ? 1 : sort === 'desc' ? -1 : null; 
+      return await ProductModel.paginate(filter, { page, limit, sort: sortOrder }); //sort: { price: 1 } 
     } catch (error) {
-      throw new Error(error);
+      console.log(error);
     }
   }
 
@@ -15,7 +19,7 @@ export default class ProductDaoMongoDB {
       const response = await ProductModel.findById(id);
       return response;
     } catch (error) {
-      throw new Error(error);
+      console.log(error);
     }
   }
 
@@ -24,7 +28,7 @@ export default class ProductDaoMongoDB {
       const response = await ProductModel.create(obj);
       return response;
     } catch (error) {
-      throw new Error(error);
+      console.log(error);
     }
   }
 
@@ -35,7 +39,7 @@ export default class ProductDaoMongoDB {
       });
       return response;
     } catch (error) {
-      throw new Error(error);
+      console.log(error);
     }
   }
 
@@ -44,7 +48,7 @@ export default class ProductDaoMongoDB {
       const response = await ProductModel.findByIdAndDelete(id);
       return response;
     } catch (error) {
-      throw new Error(error);
+      console.log(error);
     }
   }
 }

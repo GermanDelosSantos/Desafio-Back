@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
+import mongoosePaginate from "mongoose-paginate-v2";
 
-export const productsCollectionName = "coderback";
+export const productsCollectionName = "products";
 
 const productsSchema = new mongoose.Schema({
   name: { type: String, required: true },
@@ -8,6 +9,8 @@ const productsSchema = new mongoose.Schema({
   price: { type: Number, required: true },
   stock: { type: Number, required: true },
 });
+
+productsSchema.plugin(mongoosePaginate);
 
 export const ProductModel = mongoose.model(
   productsCollectionName,

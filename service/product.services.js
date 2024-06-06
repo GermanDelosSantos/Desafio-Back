@@ -5,42 +5,50 @@ import ProductDaoMongoDB from '../daos/mongodb/product.dao.js'
 const prodDao = new ProductDaoMongoDB();
 
 
-export const getAll = async () => {
+export const getAll = async (page, limit, name, sort) => {
   try {
-    return await prodDao.getAll();
+    return await prodDao.getAll(page, limit, name, sort);
   } catch (error) {
-    throw new Error(error);
+    console.log(error);
   }
 };
 
-export const getProductById = async (id) => {
+export const getById = async (id) => {
   try {
-    return await prodDao.getById(id);
+    const prod = await prodDao.getById(id);
+    if (!prod) return false;
+    else return prod;
   } catch (error) {
-    throw new Error(error);
+    console.log(error);
   }
 };
 
 export const create = async (obj) => {
   try {
-    return await prodDao.create(obj);
+    const newProd = await prodDao.create(obj);
+    if (!newProd) return false;
+    else return newProd;
   } catch (error) {
-    throw new Error(error);
+    console.log(error);
   }
 };
 
 export const update = async (id, obj) => {
   try {
-    return await prodDao.update(id, obj);
+    const prodUpd = await prodDao.update(id, obj);
+    if (!prodUpd) return false;
+    else return prodUpd;
   } catch (error) {
-    throw new Error(error);
+    console.log(error);
   }
 };
 
 export const remove = async (id) => {
   try {
-    return await prodDao.delete(id);
+    const prodDel = await prodDao.delete(id);
+    if (!prodDel) return false;
+    else return prodDel;
   } catch (error) {
-    throw new Error(error);
+    console.log(error);
   }
 };
