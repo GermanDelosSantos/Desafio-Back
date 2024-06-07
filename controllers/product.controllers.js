@@ -17,7 +17,7 @@ export const getAll = async (req, res, next) => {
         hasNextPage: response.hasNextPage
       }
     });
-    res.status(200).json(response);
+    // res.status(200).json(response);
   } catch (error) {
     next(error.message);
   }

@@ -53,3 +53,11 @@ export const deleteUser = async (id) => {
     console.log(error);
   }
 };
+
+export const getAll = async (page, limit, name, sort) => {
+  try {
+    return await userDao.getAll(page, limit, name, sort);
+  } catch (error) {
+    console.log(error);
+  }
+};
