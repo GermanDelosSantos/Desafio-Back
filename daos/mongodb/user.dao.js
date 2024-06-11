@@ -10,7 +10,7 @@ export default class UserDaoMongoDB {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   async getById(id) {
     try {
@@ -19,7 +19,7 @@ export default class UserDaoMongoDB {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   async getAll(page = 1, limit = 10) {
     try {
@@ -28,7 +28,7 @@ export default class UserDaoMongoDB {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   async create(obj) {
     try {
@@ -37,7 +37,7 @@ export default class UserDaoMongoDB {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   async update(id, obj) {
     try {
@@ -46,7 +46,7 @@ export default class UserDaoMongoDB {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   async delete(id) {
     try {
@@ -55,5 +55,24 @@ export default class UserDaoMongoDB {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
+
+  async register(user){
+    try {
+        const { email } = user;
+        const existUser = await this.model.findOne({ email });
+        if(!existUser) return await this.model.create(user);
+        else return null;
+    } catch (error) {
+        throw new Error(error)
+    }
+};
+
+async login(email, password){
+    try {
+        return await this.model.findOne({ email, password });   //null || user
+    } catch (error) {
+        throw new Error(error)
+    }
+};
 }
