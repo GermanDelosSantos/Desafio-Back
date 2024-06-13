@@ -16,6 +16,8 @@ import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
 import morgan from 'morgan';
+import passport from 'passport';
+import './passaport/local-srtategy.js';
 import 'dotenv/config'
 import './db/database.js';
 // import * as productService from './service/product.services.js';
@@ -38,7 +40,12 @@ const app = express();
 app.use(express.static(__dirname + '/public'))
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(morgan('dev'));
+
 app.use(cookieParser());
 app.use(session(storeConfig))
 
@@ -52,7 +59,7 @@ app.use('/users', userRouter);
 
 const viewsRouter = createViewsRouter();
 
-app.use('/views', viewsRouter);
+app.use('/', viewsRouter);
 
 
 

@@ -68,11 +68,11 @@ export default class UserDaoMongoDB {
     }
 };
 
-async login(email, password){
-    try {
-        return await this.model.findOne({ email, password });   //null || user
-    } catch (error) {
-        throw new Error(error)
-    }
+async login(email){
+  try {
+      return await this.model.findOne({ email });   //null || user
+  } catch (error) {
+      throw new Error(error)
+  }
 };
 }

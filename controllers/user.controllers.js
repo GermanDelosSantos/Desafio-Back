@@ -71,37 +71,38 @@ export const remove = async (req, res, next) => {
 };
 
 export const login = async (req, res, next) => {
+  //req.session.passport.user
   try {
-    const { email, password } = req.body;
-    const user = await service.login({ email, password });
-    if (!user) return res.status(401).json({ msg: "Unauthorized" });
-    
-    req.session.email = email;
-    req.session.password = password;
-    res.redirect('/views/profile');
+    let id = null;
+    if(req.session.passport && req.session.passport.user) id = req.session.passport.user;
+    const user = await service.getUserById(id);
+    if(!user) res.status(401).json({ msg: 'Error de autenticacion' });
+    const { first_name, last_name, email, age, role } = user;
+    res.json({
+      msg: 'LOGIN OK!',
+      user: {
+        first_name,
+        last_name,
+        email,
+        age,
+        role
+      }
+    })
   } catch (error) {
     next(error);
   }
 };
 
-export const register = async (req, res, next) => {
+export const register = (req, res, next) => {
   try {
-    const { email, password } = req.body;
-    let user;
-    
-    if (email === 'adminCoder@coder.com' && password === 'adminCoder123') {
-      user = await service.register({ ...req.body, role: 'admin' });
-    } else {
-      user = await service.register(req.body);
-    }
-
-    if (!user) return res.status(400).json({ msg: "User already exists!" });
-    console.log( user);
-    res.redirect('/views/login');
+    res.json({
+      msg: 'Register OK',
+      session: req.session
+    })
   } catch (error) {
     next(error);
   }
-};;
+};
 
 export const visit = (req, res) => {
   req.session.info = req.session.info || { username: 'User', contador: 0 };
