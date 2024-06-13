@@ -1,106 +1,91 @@
 import * as service from "../service/user.services.js";
 
 
-export const getById = async (req, res, next) => {
+export const getById = async (req, res) => {
   try {
-    const { id } = req.params;
-    const user = await service.getByIdUser(id);
-    if (!user) return res.status(404).json({ msg: "User not found!" });
-    res.json(user);
+    const user = await service.getByIdUser(req.params.id);
+    if (user) {
+      res.json(user);
+    } else {
+      res.status(404).json({ msg: "User not found" });
+    }
   } catch (error) {
-    next(error);
+    res.status(500).json({ msg: "Internal server error" });
   }
 };
 
-export const getByEmail = async (req, res, next) => {
+export const create = async (req, res) => {
   try {
-    const { email } = req.params;
-    const user = await service.getByEmailUser(email);
-    if (!user) return res.status(404).json({ msg: "User not found!" });
-    res.json(user);
+    const newUser = await service.createUser(req.body);
+    res.status(201).json(newUser);
   } catch (error) {
-    next(error);
+    res.status(500).json({ msg: "Internal server error" });
   }
 };
 
-export const getAll = async (req, res, next) => {
+export const update = async (req, res) => {
+  try {
+    const userUpdated = await service.updateUser(req.params.id, req.body);
+    if (userUpdated) {
+      res.json(userUpdated);
+    } else {
+      res.status(404).json({ msg: "User not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ msg: "Internal server error" });
+  }
+};
+
+export const remove = async (req, res) => {
+  try {
+    const userDeleted = await service.deleteUser(req.params.id);
+    if (userDeleted) {
+      res.json(userDeleted);
+    } else {
+      res.status(404).json({ msg: "User not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ msg: "Internal server error" });
+  }
+};
+
+export const getAll = async (req, res) => {
   try {
     const { page, limit, name, sort } = req.query;
-    const response = await service.getAll(page, limit, name, sort);
-    res.json(response);
+    const users = await service.getAllUsers(page, limit, name, sort);
+    res.json(users);
   } catch (error) {
-    next(error);
+    res.status(500).json({ msg: "Internal server error" });
   }
 };
 
-export const create = async (req, res, next) => {
+export const login = async (req, res) => {
   try {
-    const user = { ...req.body };
-    const newUser = await service.createUser(user);
-    if (!newUser) return res.status(400).json({ msg: "Validation Error!" });
-    res.json({ data: newUser });
+    const { email, password } = req.body;
+    const user = await service.login(email, password);
+    if (user) {
+      req.session.email = email;
+      req.session.password = user.password;
+      res.redirect("/profile");
+    } else {
+      res.status(401).json({ msg: "Authentication failed" });
+    }
   } catch (error) {
-    next(error);
+    res.status(500).json({ msg: "Internal server error" });
   }
 };
 
-export const update = async (req, res, next) => {
+export const register = async (req, res) => {
   try {
-    const { id } = req.params;
-    const userData = { ...req.body };
-
-    const user = await service.getByIdUser(id);
-    if (!user) return res.status(404).json({ msg: "User not found!" });
-
-    const userUpdated = await service.updateUser(id, userData);
-    res.json({ msg: "User updated", data: userUpdated });
+    const { email, password, ...additionalInfo } = req.body;
+    const user = await service.register(email, password, additionalInfo);
+    if (user) {
+      res.redirect("/login");
+    } else {
+      res.status(401).json({ msg: "User exists" });
+    }
   } catch (error) {
-    next(error);
-  }
-};
-
-export const remove = async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const userDeleted = await service.deleteUser(id);
-    if (!userDeleted) return res.status(404).json({ msg: "User not found!" });
-    res.json({ msg: "User deleted" });
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const login = async (req, res, next) => {
-  //req.session.passport.user
-  try {
-    let id = null;
-    if(req.session.passport && req.session.passport.user) id = req.session.passport.user;
-    const user = await service.getUserById(id);
-    if(!user) res.status(401).json({ msg: 'Error de autenticacion' });
-    const { first_name, last_name, email, age, role } = user;
-    res.json({
-      msg: 'LOGIN OK!',
-      user: {
-        first_name,
-        last_name,
-        email,
-        age,
-        role
-      }
-    })
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const register = (req, res, next) => {
-  try {
-    res.json({
-      msg: 'Register OK',
-      session: req.session
-    })
-  } catch (error) {
-    next(error);
+    res.status(500).json({ msg: "Internal server error" });
   }
 };
 

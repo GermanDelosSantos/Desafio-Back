@@ -1,4 +1,5 @@
 import { UserModel } from "./models/user.model.js";
+import { isValidObjectId } from "mongoose";
 
 export default class UserDaoMongoDB {
 
@@ -13,13 +14,16 @@ export default class UserDaoMongoDB {
   };
 
   async getById(id) {
+    if (!isValidObjectId(id)) {
+      throw new Error('Invalid ObjectId');
+    }
     try {
       const response = await UserModel.findById(id).populate("cart");
       return response;
     } catch (error) {
       console.log(error);
     }
-  };
+  }
 
   async getAll(page = 1, limit = 10) {
     try {

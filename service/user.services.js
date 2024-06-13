@@ -1,24 +1,29 @@
 import UserDaoMongoDB from "../daos/mongodb/user.dao.js";
-import { createHash } from "../utils.js";
+import { createHash, isValidPassword } from "../utils.js";
+import { isValidObjectId } from 'mongoose';
+
 const userDao = new UserDaoMongoDB();
 
 export const getByIdUser = async (id) => {
   try {
+    if (!isValidObjectId(id)) {
+      throw new Error('Invalid ObjectId');
+    }
     const user = await userDao.getById(id);
-    if (!user) return false;
-    else return user;
+    return user || false;
   } catch (error) {
-    console.log(error);
+    console.error(error);
+    throw new Error("Error retrieving user by ID");
   }
 };
 
 export const getByEmailUser = async (email) => {
   try {
     const user = await userDao.getByEmail(email);
-    if (!user) return false;
-    else return user;
+    return user || false;
   } catch (error) {
-    console.log(error);
+    console.error(error);
+    throw new Error("Error retrieving user by email");
   }
 };
 
@@ -26,98 +31,86 @@ export const createUser = async (obj) => {
   try {
     const newUser = await userDao.create(obj);
     if (!newUser) throw new Error("Validation Error!");
-    else return newUser;
+    return newUser;
   } catch (error) {
-    console.log(error);
+    console.error(error);
+    throw new Error("Error creating user");
   }
 };
 
 export const updateUser = async (id, obj) => {
   try {
+    if (!isValidObjectId(id)) {
+      throw new Error('Invalid ObjectId');
+    }
     let item = await userDao.getById(id);
     if (!item) {
       throw new Error("User not found!");
-    } else {
-      const userUpdated = await userDao.update(id, obj);
-      return userUpdated;
     }
+    const userUpdated = await userDao.update(id, obj);
+    return userUpdated;
   } catch (error) {
-    console.log(error);
+    console.error(error);
+    throw new Error("Error updating user");
   }
 };
 
 export const deleteUser = async (id) => {
   try {
+    if (!isValidObjectId(id)) {
+      throw new Error('Invalid ObjectId');
+    }
     const userDeleted = await userDao.delete(id);
     return userDeleted;
   } catch (error) {
-    console.log(error);
+    console.error(error);
+    throw new Error("Error deleting user");
   }
 };
 
-export const getAll = async (page, limit, name, sort) => {
+export const getAllUsers = async (page, limit, name, sort) => {
   try {
     return await userDao.getAll(page, limit, name, sort);
   } catch (error) {
-    console.log(error);
+    console.error(error);
+    throw new Error("Error retrieving users");
   }
 };
 
-export const login = async (req, res) => {
+export const login = async (email, password) => {
   try {
-    const { email, password } = req.body;
-    const user = await userDao.login(email);
-    if (!user) res.status(401).json({ msg: "Autenticación fallida" });
-    //res.redirect('/error-login)
-      if(isValidPassword(password, user)){
-        req.session.email = email;
-        req.session.password = user.password;
-        res.redirect("/profile");
-      } else
-      res.status(401).json({ msg: "Autenticación fallida" });
-  } catch (error) {
-    throw new Error(error);
-  }
-};
-
-
-export const register = async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    if (email === "adminCoder@coder.com" && password === "adminCod3r123") {
-      const user = await userDao.register({
-        ...req.body,
-        password: createHash(password),
-        role: "admin",
-      });
-      if (!user) res.status(401).json({ msg: "user exist!" });
-      else res.redirect("/login");
+    const user = await userDao.getByEmail(email);
+    if (!user) {
+      throw new Error("Authentication failed");
     }
-    const user = await userDao.register({
-      ...req.body,
-      password: createHash(password)
-    });
-    if (!user) res.status(401).json({ msg: "user exist!" });
-    else res.redirect("/login");
+    if (isValidPassword(password, user)) {
+      return user;
+    } else {
+      throw new Error("Authentication failed");
+    }
   } catch (error) {
-    throw new Error(error);
+    console.error(error);
+    throw new Error("Internal server error");
   }
 };
 
-export const visit = (req, res) => {
-  req.session.info && req.session.info.contador++;
-  res.json({ msg: `${req.session.info.username} ha visitado el sitio ${req.session.info.contador} veces` })
-};
-
-export const infoSession = (req, res) => {
-  res.json({
-      session: req.session,
-      sessionId: req.sessionID,
-      cookies: req.cookies
-  })
-};
-
-export const logout = (req, res) => {
-  req.session.destroy();
-  res.send('session destroy')
+export const register = async (email, password, additionalInfo) => {
+  try {
+    let user = await userDao.getByEmail(email);
+    if (user) {
+      throw new Error("User exists");
+    }
+    const hashedPassword = createHash(password);
+    user = {
+      ...additionalInfo,
+      email,
+      password: hashedPassword,
+      role: email === "adminCoder@coder.com" && password === "adminCod3r123" ? "admin" : "user",
+    };
+    const newUser = await userDao.create(user);
+    return newUser;
+  } catch (error) {
+    console.error(error);
+    throw new Error("Internal server error");
+  }
 };

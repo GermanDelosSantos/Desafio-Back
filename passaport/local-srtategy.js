@@ -10,7 +10,8 @@ const strategyConfig = {
 
 const signUp = async (req, email, password, done) => {
     try {
-        const user = await services.getUserByEmail(email);
+        const user = await services.getByEmailUser(email);
+        console.log(user)
         if(user) return done(null, false);
         const newUser = await services.register(req.body);
         return done(null, newUser);
