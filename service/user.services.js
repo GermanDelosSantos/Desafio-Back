@@ -1,3 +1,4 @@
+import { UserModel } from "../daos/mongodb/models/user.model.js";
 import UserDaoMongoDB from "../daos/mongodb/user.dao.js";
 import { createHash, isValidPassword } from "../utils.js";
 import { isValidObjectId } from 'mongoose';
@@ -10,7 +11,8 @@ export const getByIdUser = async (id) => {
       throw new Error('Invalid ObjectId');
     }
     const user = await userDao.getById(id);
-    return user || false;
+    if(!user) return false;
+    return user;
   } catch (error) {
     console.error(error);
     throw new Error("Error retrieving user by ID");
@@ -19,8 +21,9 @@ export const getByIdUser = async (id) => {
 
 export const getByEmailUser = async (email) => {
   try {
-    const user = await userDao.getByEmail(email);
-    return user || false;
+    const [user] = await userDao.getByEmail(email);
+    if(!user) return false;
+    return user;
   } catch (error) {
     console.error(error);
     throw new Error("Error retrieving user by email");
@@ -79,7 +82,7 @@ export const getAllUsers = async (page, limit, name, sort) => {
 
 export const login = async (email, password) => {
   try {
-    const user = await userDao.getByEmail(email);
+    const [user] = await userDao.getByEmail(email);
     if (!user) {
       throw new Error("Authentication failed");
     }
@@ -96,7 +99,7 @@ export const login = async (email, password) => {
 
 export const register = async (email, password, additionalInfo) => {
   try {
-    let user = await userDao.getByEmail(email);
+    let [user] = await userDao.getByEmail(email);
     if (user) {
       throw new Error("User exists");
     }

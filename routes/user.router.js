@@ -18,7 +18,7 @@ router.delete('/:id', controller.remove);
 
 router.post("/login", passport.authenticate('login'),controller.login);
 
-router.post('/register',passport.authenticate('register'), controller.register)
+router.post('/register',passport.authenticate('register'));
 
 router.get("/info", validateLogin, controller.infoSession);
 
