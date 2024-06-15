@@ -1,2 +1,11 @@
-<h1>User Profile</h1>
-<p>bienvenido, {{user.first_name}}, {{user.mail}}!</p>
+  <div id="boxProfile">
+    <div id="profileContainer">
+        <h1 id="profileTitle">Bienvenido!</h1>
+        <p>{{first_name}} {{last_name}}</p>
+        <p>Email: {{email}}</p>
+        <form action="/users/logout" method="POST">
+        <button type="submit" id="profileButton">Cerrar sesión</button>
+        </form>
+    </div>
+
+  </div>
