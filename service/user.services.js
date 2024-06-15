@@ -1,119 +1,59 @@
 import { UserModel } from "../daos/mongodb/models/user.model.js";
 import UserDaoMongoDB from "../daos/mongodb/user.dao.js";
 import { createHash, isValidPassword } from "../utils.js";
-import { isValidObjectId } from 'mongoose';
 
-const userDao = new UserDaoMongoDB();
+const userDao = new UserDaoMongoDB(UserModel);
 
-export const getByIdUser = async (id) => {
+export const getUserById = async (id) => {
   try {
-    if (!isValidObjectId(id)) {
-      throw new Error('Invalid ObjectId');
-    }
-    const user = await userDao.getById(id);
-    if(!user) return false;
-    return user;
+    return await userDao.getById(id);
   } catch (error) {
-    console.error(error);
-    throw new Error("Error retrieving user by ID");
+    throw new Error(error);
   }
 };
 
-export const getByEmailUser = async (email) => {
+export const getUserByEmail = async (email) => {
   try {
-    const [user] = await userDao.getByEmail(email);
-    if(!user) return false;
-    return user;
+    return await userDao.getByEmail(email);
   } catch (error) {
-    console.error(error);
-    throw new Error("Error retrieving user by email");
+    throw new Error(error);
   }
 };
 
-export const createUser = async (obj) => {
+export const register = async (user) => {
   try {
-    const newUser = await userDao.create(obj);
-    if (!newUser) throw new Error("Validation Error!");
-    return newUser;
+    const { email, password } = user;
+    const existUser = await getUserByEmail(email);
+    if (!existUser) {
+      if (email === "adminCoder@coder.com" && password === "adminCoder123") {
+        const newUser = await userDao.register({
+          ...user,
+          password: createHash(password),
+          role: "admin",
+        });
+        return newUser;
+      } else {
+        const newUser = await userDao.register({
+          ...user,
+          password: createHash(password),
+        });
+        return newUser;
+      }
+    } else return null;
   } catch (error) {
-    console.error(error);
-    throw new Error("Error creating user");
+    throw new Error(error);
   }
 };
 
-export const updateUser = async (id, obj) => {
+export const login = async (user) => {
   try {
-    if (!isValidObjectId(id)) {
-      throw new Error('Invalid ObjectId');
-    }
-    let item = await userDao.getById(id);
-    if (!item) {
-      throw new Error("User not found!");
-    }
-    const userUpdated = await userDao.update(id, obj);
-    return userUpdated;
+    const { email, password } = user;
+    const userExist = await getUserByEmail(email);
+    if (!userExist) return null;
+    const passValid = isValidPassword(password, userExist);
+    if (!passValid) return null;
+    return userExist;
   } catch (error) {
-    console.error(error);
-    throw new Error("Error updating user");
-  }
-};
-
-export const deleteUser = async (id) => {
-  try {
-    if (!isValidObjectId(id)) {
-      throw new Error('Invalid ObjectId');
-    }
-    const userDeleted = await userDao.delete(id);
-    return userDeleted;
-  } catch (error) {
-    console.error(error);
-    throw new Error("Error deleting user");
-  }
-};
-
-export const getAllUsers = async (page, limit, name, sort) => {
-  try {
-    return await userDao.getAll(page, limit, name, sort);
-  } catch (error) {
-    console.error(error);
-    throw new Error("Error retrieving users");
-  }
-};
-
-export const login = async (email, password) => {
-  try {
-    const [user] = await userDao.getByEmail(email);
-    if (!user) {
-      throw new Error("Authentication failed");
-    }
-    if (isValidPassword(password, user)) {
-      return user;
-    } else {
-      throw new Error("Authentication failed");
-    }
-  } catch (error) {
-    console.error(error);
-    throw new Error("Internal server error");
-  }
-};
-
-export const register = async (email, password, additionalInfo) => {
-  try {
-    let [user] = await userDao.getByEmail(email);
-    if (user) {
-      throw new Error("User exists");
-    }
-    const hashedPassword = createHash(password);
-    user = {
-      ...additionalInfo,
-      email,
-      password: hashedPassword,
-      role: email === "adminCoder@coder.com" && password === "adminCod3r123" ? "admin" : "user",
-    };
-    const newUser = await userDao.create(user);
-    return newUser;
-  } catch (error) {
-    console.error(error);
-    throw new Error("Internal server error");
+    throw new Error(error);
   }
 };
