@@ -2,6 +2,9 @@ import * as services from '../service/user.services.js';
 import { Strategy as GithubStrategy } from 'passport-github2';
 import passport from 'passport';
 import 'dotenv/config';
+import UserDao from '../daos/mongodb/user.dao.js';
+
+const userDao = new UserDao();
 
 const strategyConfig = {
     clientID: process.env.CLIENT_ID,
@@ -28,12 +31,14 @@ const registerOrLogin = async (accessToken, refreshToken, profile, done) => {
 passport.use('github', new GithubStrategy(strategyConfig, registerOrLogin));
 
 passport.serializeUser((user, done)=>{
+    console.log(user);
     done(null, user._id)
 });
 
 passport.deserializeUser(async(id, done)=>{
     try {
         const user = await services.getUserById(id);
+        console.log(user)
         return done(null, user);
     } catch (error) {
         done(error)

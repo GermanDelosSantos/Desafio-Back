@@ -5,8 +5,8 @@ import { isAuth } from "../midlewares/isAuth.js";
 import {
     registerResponse,
     loginResponse,
-    logout,
     githubResponse,
+    logout
   } from "../controllers/user.controllers.js";
   
   const router = Router();
@@ -17,13 +17,15 @@ import {
 
   router.get('/private', isAuth, (req, res)=>res.json({ msg: 'Ruta PRIVADA' }));
 
-  router.post('/logout', logout);
 
-  router.get('/register-github', passport.authenticate('github', { scope: [ 'user:email' ] })) 
+  router.get('/register-github', passport.authenticate('github', { scope: [ 'user:email' ] }))  
 
   router.get('/profile', passport.authenticate( 'github' , {
-    failureRedirect: '/login', 
-    successRedirect: '/profile-github', 
-    passReqToCallback: true
-}));
+      failureRedirect: '/login', 
+      successRedirect: '/profile-github', 
+      passReqToCallback: true
+  }));
+  
+  router.post('/logout', logout);
+
 export default router;

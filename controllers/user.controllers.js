@@ -11,19 +11,9 @@ export const registerResponse = (req, res, next) => {
 
 export const loginResponse = async(req, res, next)=>{
   try {
-      const user = await services.getById(req.session.passport.user);
+      const user = await services.getUserById(req.session.passport.user);
       const { first_name, last_name, email, age, role } = user;
-      res.json({
-          msg: 'Login OK',
-          session: req.session,
-          userData: {
-              first_name,
-              last_name,
-              email,
-              age,
-              role
-          }
-      })
+      res.redirect('/profile')
   } catch (error) {
       next(error);
   }
@@ -54,4 +44,4 @@ export const githubResponse = async(req, res, next)=>{
   } catch (error) {
       next(error);
   }
-}
+};

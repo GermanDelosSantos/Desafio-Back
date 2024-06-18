@@ -30,16 +30,16 @@ const router = (products) => {
             res.render("register");
     });
 
-    route.get('/profile', (req, res) =>{
-        res.render("profile")
-    })
-          
-    route.get("/github-profile", isAuth, (req, res) => {
+    route.get("/login", (req, res) => {
+        res.render("login");
+      });
+      
+    route.get("/profile", isAuth, (req, res) => {
         console.log("req.user", req.user);
         const user = req.user.toObject();
-        res.render("github-profile", { user });
+        res.render("profile", { user });
       });
-
+      
 
         route.get('/chat', async (req, res) => {
         const messages = await messageService.getAll();
