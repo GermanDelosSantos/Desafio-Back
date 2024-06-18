@@ -1,5 +1,6 @@
 import { Router } from "express";
 import * as messageService from '../service/message.services.js';
+import { isAuth } from "../midlewares/isAuth.js";
 // import * as productService from '../service/product.services.js';
 
 const router = (products) => {
@@ -28,11 +29,16 @@ const router = (products) => {
      route.get("/register", (req, res) => {
             res.render("register");
     });
+
+    route.get('/profile', (req, res) =>{
+        res.render("profile")
+    })
           
-    route.get("/profile", (req, res) => {
-              console.log(req.session)
-            res.render("profile");
-    });
+    route.get("/github-profile", isAuth, (req, res) => {
+        console.log("req.user", req.user);
+        const user = req.user.toObject();
+        res.render("github-profile", { user });
+      });
 
 
         route.get('/chat', async (req, res) => {

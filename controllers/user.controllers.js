@@ -8,21 +8,26 @@ export const registerResponse = (req, res, next) => {
   }
 };
 
-export const loginResponse = async (req, res, next) => {
+
+export const loginResponse = async(req, res, next)=>{
   try {
-    let id = null;
-    if(req.session.passport && req.session.passport.user) id = req.session.passport.user;
-    const user = await services.getUserById(id);
-    if(!user) res.status(401).json({ msg: 'Error de autenticacion' });
-    res.render('profile', {
-      first_name: user.first_name,
-      last_name: user.last_name,
-      email: user.email
-    });
+      const user = await services.getById(req.session.passport.user);
+      const { first_name, last_name, email, age, role } = user;
+      res.json({
+          msg: 'Login OK',
+          session: req.session,
+          userData: {
+              first_name,
+              last_name,
+              email,
+              age,
+              role
+          }
+      })
   } catch (error) {
-    next(error);
+      next(error);
   }
-};
+}
 
 export const logout = (req, res) => {
   req.session.destroy((err) => {
@@ -32,3 +37,21 @@ export const logout = (req, res) => {
     res.redirect('/login');
   });
 };
+
+export const githubResponse = async(req, res, next)=>{
+  try {
+      const { first_name, last_name, email, isGithub } = req.user;
+      res.json({
+          msg: 'Register/Login Github OK',
+          session: req.session,
+          userData: {
+              first_name,
+              last_name,
+              email,
+              isGithub
+          }
+      })
+  } catch (error) {
+      next(error);
+  }
+}

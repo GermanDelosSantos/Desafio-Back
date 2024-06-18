@@ -178,3 +178,7 @@ button:hover{
     font-family: sans-serif;
     color: rgb(192, 13, 13);
 }
+
+#registerButton{
+    width: 20%;
+}

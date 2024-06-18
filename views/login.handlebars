@@ -3,8 +3,9 @@
 <form action="/users/login" method="post">
 <placeholder>Mail</placeholder> <input type="text" name="email" id="" />
 <placeholder>Contraseña</placeholder> <input type="password" name="password" id="" />
-  <input type="submit" value="LOGIN">
+  <button type="submit" value="LOGIN" id="registerButton">Loggin </button>
 </form>
 
 <h2>NEW USER?</h2>
-<button onclick="location.href='/register'">GO REGISTER</button>
+<button onclick="location.href='/register'" id="registerButton">GO REGISTER</button>
+<button onclick="location.href='/users/register-github'" id="registerButton">Register whit Github</button>

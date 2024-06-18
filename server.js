@@ -18,6 +18,7 @@ import MongoStore from 'connect-mongo';
 import morgan from 'morgan';
 import passport from 'passport';
 import './passaport/local-srtategy.js';
+import './passaport/github-strategy.js'
 import 'dotenv/config';
 import './db/database.js';
 // import * as productService from './service/product.services.js';
@@ -43,7 +44,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(cookieParser());
-app.use(session(storeConfig));  // Mueve esta línea antes de passport.session()
+app.use(session(storeConfig));
 
 app.use(passport.initialize());
 app.use(passport.session());
