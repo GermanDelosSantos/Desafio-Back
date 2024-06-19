@@ -1,11 +1,21 @@
-<h1>LOGIN</h1>
-
-<form action="/users/login" method="post">
+<div id="boxLoggin">
+  <div id="logginContainer">
+    <div id="divForm">
+            <h1>LOGGIN</h1>
+<form action="/users/login" method="post" id="logginForm">
 <placeholder>Mail</placeholder> <input type="text" name="email" id="" />
-<placeholder>Contraseña</placeholder> <input type="password" name="password" id="" />
+<placeholder>Password</placeholder> <input type="password" name="password" id="" />
   <button type="submit" value="LOGIN" id="registerButton" onclick="location.href='/profile'">Loggin </button>
 </form>
+    </div>
 
-<h2>NEW USER?</h2>
+
+<div id="divButton">
+  <h2 class="h2Loggin">NEW USER?</h2>
 <button onclick="location.href='/register'" id="registerButton">GO REGISTER</button>
-<button onclick="location.href='/users/register-github'" id="registerButton">Register whit Github</button>
+<button onclick="location.href='/users/register-github'" id="registerButton">Register with Github</button>
+</div>
+
+</div>
+
+</div>

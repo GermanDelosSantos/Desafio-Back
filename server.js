@@ -34,7 +34,7 @@ const storeConfig = {
     secret: 'squirrel',
     resave: true,
     saveUninitialized: true,
-    cookie: { maxAge: 180000 }
+    cookie: { maxAge: 600000 }
 };
 
 const app = express();
