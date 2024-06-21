@@ -2,20 +2,62 @@ import * as services from "../service/user.services.js";
 
 export const registerResponse = (req, res, next) => {
   try {
-    res.redirect("/login");
+    res.json({
+      msg: 'Register OK',
+      session: req.session
+    })
   } catch (error) {
     next(error);
   }
 };
 
-
-export const loginResponse = async(req, res, next)=>{
+export const loginResponse = async (req, res, next) => {
+  //req.session.passport.user
   try {
-      const user = await services.getUserById(req.session.passport.user);
-      const { first_name, last_name, email, age, role } = user;
-      res.redirect('/profile')
+    let id = null;
+    if(req.session.passport && req.session.passport.user) id = req.session.passport.user;
+    const user = await services.getUserById(id);
+    if(!user) res.status(401).json({ msg: 'Error de autenticacion' });
+    const { first_name, last_name, email, age, role } = user;
+    res.redirect('/profile')
   } catch (error) {
-      next(error);
+    next(error);
+  }
+};
+
+export const githubResponse = async(req, res, next) => {
+  try {
+    // console.log(req.user);
+    const { first_name, last_name, email, role } = req.user;
+    res.json({
+      msg: 'LOGIN CON GITHUB OK!',
+      user: {
+        first_name,
+        last_name,
+        email,
+        role
+      }
+    })
+    } catch (error) {
+    next(error)
+  }
+}
+
+export const googleResponse = async(req, res, next) => {
+  try {
+    // console.log(req.user);
+    const { first_name, last_name, email, role } = req.user;
+    res.json({
+      msg: 'LOGIN CON GOOGLE OK!',
+      user: {
+        first_name,
+        last_name,
+        email,
+        role
+      }
+    })
+    } catch (error) {
+    next(error)
   }
 }
 
@@ -26,22 +68,4 @@ export const logout = (req, res) => {
     }
     res.redirect('/login');
   });
-};
-
-export const githubResponse = async(req, res, next)=>{
-  try {
-      const { first_name, last_name, email, isGithub } = req.user;
-      res.json({
-          msg: 'Register/Login Github OK',
-          session: req.session,
-          userData: {
-              first_name,
-              last_name,
-              email,
-              isGithub
-          }
-      })
-  } catch (error) {
-      next(error);
-  }
 };

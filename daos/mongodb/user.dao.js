@@ -1,3 +1,6 @@
+import { UserModel } from './models/user.model.js';
+import { createHash, isValidPassword } from '../../utils.js';
+
 export default class UserDao {
   constructor(model) {
     this.model = model;

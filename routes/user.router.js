@@ -20,9 +20,9 @@ import {
 
   router.get('/register-github', passport.authenticate('github', { scope: [ 'user:email' ] }))  
 
-  router.get('/profile', passport.authenticate( 'github' , {
+  router.get('/profile-github', passport.authenticate( 'github' , {
       failureRedirect: '/login', 
-      successRedirect: '/profile-github', 
+      successRedirect: '/profile', 
       passReqToCallback: true
   }));
   

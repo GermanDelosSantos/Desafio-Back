@@ -13,34 +13,45 @@ const strategyConfig = {
 };
 
 const registerOrLogin = async (accessToken, refreshToken, profile, done) => {
-    // console.log(profile);
-    const email = profile._json.email;
-    const user = await userDao.getByEmail(email);
-    if (user) return done(null, user);
-    const newUser = await userDao.register({
-      first_name: profile._json.name.split(' ')[0],
-      last_name: profile._json.name.split(' ').length === 3 ? profile._json.name.split(' ')[1].concat(' ', profile._json.name.split(' ')[2]) : profile._json.name.split(' ')[1],
-      email,
-      image: profile._json.avatar_url,
-      isGithub: true,
-      // image: ---
-    });
-    return done(null, newUser);
-  };
+    try {
+        console.log(profile);
+        
+        const email = profile._json.email ?? `no-email-${profile.id}@github.com`;
+        const name = profile._json.name ?? profile.username ?? 'NoName';
+        
+        const nameParts = name.split(' ');
+        const first_name = nameParts[0] ?? 'NoFirstName';
+        const last_name = nameParts.length > 1 ? nameParts.slice(1).join(' ') : 'NoLastName';
+        
+        const user = await services.getUserByEmail(email);
+        if (user) return done(null, user);
+        
+        const newUser = await services.register({
+            first_name,
+            last_name,
+            email,
+            password: ' ',
+            isGithub: true
+        });
+        return done(null, newUser);
+    } catch (error) {
+        return done(error);
+    }
+};
 
 passport.use('github', new GithubStrategy(strategyConfig, registerOrLogin));
 
-passport.serializeUser((user, done)=>{
+passport.serializeUser((user, done) => {
     console.log(user);
-    done(null, user._id)
+    done(null, user._id);
 });
 
-passport.deserializeUser(async(id, done)=>{
+passport.deserializeUser(async (id, done) => {
     try {
         const user = await services.getUserById(id);
-        console.log(user)
+        console.log(user);
         return done(null, user);
     } catch (error) {
-        done(error)
+        done(error);
     }
 });
