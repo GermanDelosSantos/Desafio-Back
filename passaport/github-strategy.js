@@ -17,11 +17,10 @@ const registerOrLogin = async (accessToken, refreshToken, profile, done) => {
         console.log(profile);
         
         const email = profile._json.email ?? `no-email-${profile.id}@github.com`;
-        const name = profile._json.name ?? profile.username ?? 'NoName';
+        const first_name = profile.username.split(' ')[0];
+        // const last_name = profile._json.last_name ?? 'NoLastName';
         
-        const nameParts = name.split(' ');
-        const first_name = nameParts[0] ?? 'NoFirstName';
-        const last_name = nameParts.length > 1 ? nameParts.slice(1).join(' ') : 'NoLastName';
+        const last_name = profile.username.split(' ').length === 3 ? profile.username.split(' ')[1].concat(' ', profile.username.split(' ')[2]) : profile.username.split(' ')[1];
         
         const user = await services.getUserByEmail(email);
         if (user) return done(null, user);
