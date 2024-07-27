@@ -1,5 +1,5 @@
 import { CartModel } from "./models/cart.model.js";
-import MongoDao from './mongo.dao.js';
+import MongoDao from '../mongo.dao.js';
 
 
 export default class CartDaoMongoDB extends MongoDao {
@@ -104,17 +104,19 @@ export default class CartDaoMongoDB extends MongoDao {
       throw new Error(error);
     }
   }
+
+  async getAll() {
+    try {
+      const response = await CartModel.find({});
+      return response;
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
 };
 
 // export default class CartDaoMongoDB {
-//   async getAll() {
-//     try {
-//       const response = await CartModel.find({});
-//       return response;
-//     } catch (error) {
-//       throw new Error(error);
-//     }
-//   }
+
 
 //   async getById(id) {
 //     try {

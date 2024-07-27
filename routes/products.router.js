@@ -1,16 +1,20 @@
 import { Router } from "express";
-import * as controllers from '../controllers/product.controllers.js'
+import ProductController from "../controllers/product.controllers.js";
+import { checkAuth } from "../midlewares/checkJwt.js";
+import { checkAdmin } from "../midlewares/checkAdmin.js";
+const controller = new ProductController();
 
 const router = Router();
 
-router.get("/", controllers.getAll);
 
-router.get("/:id", controllers.getById);
+router.get('/', [checkAuth], controller.getAll);
 
-router.post("/", controllers.create);
+router.get('/:id', [checkAuth], controller.getById);
 
-router.put("/:id", controllers.update);
+router.post('/', [checkAuth, checkAdmin], controller.create);
 
-router.delete("/:id", controllers.remove);
+router.put('/:id', [checkAuth, checkAdmin], controller.update);
+
+router.delete('/:id', [checkAuth, checkAdmin], controller.delete);
 
 export default router;

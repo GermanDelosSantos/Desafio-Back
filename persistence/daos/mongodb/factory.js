@@ -1,8 +1,8 @@
-import ProductDaoMongo from "./product.dao.js";
-import ProductDaoFS from './filesystem/product.dao.js';
-import CartDaoMongoDB from "./cart.dao.js";
-import UserDaoMongo from "./user.dao.js";
-import { initMongoDB } from '../../db/database.js'
+import ProductDaoMongo from "../mongodb/product.dao.js";
+import ProductDaoFS from '../filesystem/product.dao.js';
+import CartDaoMongoDB from '../mongodb/cart.dao.js';
+import UserDaoMongo from "../mongodb/user.dao.js";
+import { initMongoDB } from '../../../db/database.js';
 
 let prodDao = null;
 let userDao = null;
@@ -13,7 +13,7 @@ let persistence = process.argv[2];
 switch (persistence) {
     case 'fs':
         console.log(persistence)
-        prodDao = new ProductDaoFS('./src/daos/filesystem/products.json');
+        prodDao = new ProductDaoFS('./src/persistence/daos/filesystem/products.json');
         // userDao = new UserDaoFS('./src/daos/....
         // cartDao = new
         break;

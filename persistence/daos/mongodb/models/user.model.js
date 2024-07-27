@@ -29,6 +29,11 @@ const userSchema = new Schema({
   isGithub: {
       type: Boolean,
       default: false
+  },
+  cart: {
+    type: Schema.Types.ObjectId,
+    ref: "carts",
+    default: []
   }
 });
 

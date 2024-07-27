@@ -1,4 +1,4 @@
-import factory from '../daos/factory.js';
+import factory from '../daos/mongodb/factory.js';
 const { prodDao } = factory;
 import ProductDTO from '../dtos/product.req.dto.js';
 import ProductResDTO from '../dtos/product.res.dto.js';

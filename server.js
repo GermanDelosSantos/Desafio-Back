@@ -2,16 +2,17 @@ import EventEmitter from 'events';
 EventEmitter.defaultMaxListeners = 20;
 
 import express from 'express';
-import { initMongoDB } from './daos/mongodb/connection.js';
+import { initMongoDB } from './persistence/daos/mongodb/connection.js';
 import { Server } from 'socket.io';
 import { errorHandler } from './midlewares/errorHandler.js';
 import { __dirname } from './utils.js';
+import mainRouter from './routes/index.js'
 import cartRouter from './routes/cart.router.js';
 import productRouter from './routes/products.router.js';
 import createViewsRouter from './routes/view.router.js';
 import userRouter from './routes/user.router.js';
 import handlebars from 'express-handlebars';
-import * as messageService from './service/message.services.js';
+// import * as messageService from './service/message.services.js';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
@@ -22,8 +23,8 @@ import './passaport/github-strategy.js'
 import 'dotenv/config';
 import './db/database.js';
 // import * as productService from './service/product.services.js';
-
-const MONGO_URL = 'mongodb+srv://noiconuf:admin@cluster0.qu7hol7.mongodb.net/coderBack?retryWrites=true&w=majority&appName=Cluster0';
+const MainRouter = new mainRouter();
+const MONGO_URL = "mongodb+srv://noiconuf:admin@cluster0.qu7hol7.mongodb.net/coderBack?retryWrites=true&w=majority&appName=Cluster0"
 
 const storeConfig = {
     store: MongoStore.create({
@@ -54,10 +55,10 @@ app.use(morgan('dev'));
 app.engine("handlebars", handlebars.engine());
 app.set("view engine", "handlebars");
 app.set("views", __dirname + "/views");
-
-app.use('/carts', cartRouter);
-app.use('/products', productRouter);
-app.use('/users', userRouter);
+app.use('/api', MainRouter.getRouter())
+// app.use('/carts', cartRouter);
+// app.use('/products', productRouter);
+// app.use('/users', userRouter);
 
 const viewsRouter = createViewsRouter();
 
@@ -65,7 +66,7 @@ app.use('/', viewsRouter);
 
 app.use(errorHandler);
 
-const PORT = 8080;
+const PORT = process.env.PORT || 3000;
 
 initMongoDB();
 

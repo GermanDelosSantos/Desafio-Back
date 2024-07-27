@@ -1,18 +1,28 @@
 import { UserModel } from './models/user.model.js';
-import MongoDao from "./mongo.dao.js";
+import MongoDao from "../mongo.dao.js";
 
-class UserDao extends MongoDao {
+export default class UserDao extends MongoDao {
   constructor() {
     super(UserModel);
   }
   
-  async getByEmail(email){
+  async getUserByEmaill(email){
     try {
         return await this.model.findOne({ email })
     } catch (error) {
         throw new Error(error)
     }
 }
+async getUserById(id){
+  try {
+      return await this.model.findById(id).populate("carts"); 
+  } catch (error) {
+      throw new Error(error)
+  }
+}
+
+
+
 }
 // export default class UserDao {
 //   constructor(model) {

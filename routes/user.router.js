@@ -1,19 +1,16 @@
 import { Router } from 'express';
 import passport from 'passport';
 import { isAuth } from "../midlewares/isAuth.js";
+import UserController from '../controllers/user.controllers.js';
 
-import {
-    registerResponse,
-    loginResponse,
-    githubResponse,
-    logout
-  } from "../controllers/user.controllers.js";
+const controllers = new UserController();
+
   
   const router = Router();
   
-  router.post("/register", passport.authenticate('register'), registerResponse);
+  router.post("/register", passport.authenticate('register'), controllers.register);
   
-  router.post("/login", passport.authenticate('login'), loginResponse);
+  router.post("/login", passport.authenticate('login'), controllers.loginResponse);
 
   router.get('/private', isAuth, (req, res)=>res.json({ msg: 'Ruta PRIVADA' }));
 
@@ -26,6 +23,6 @@ import {
       passReqToCallback: true
   }));
   
-  router.post('/logout', logout);
+  router.post('/logout', controllers.logout);
 
 export default router;

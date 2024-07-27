@@ -1,60 +1,14 @@
-import * as service from "../service/cart.services.js";
+import Controller from "./class.controller.js";
+import CartServices from "../service/cart.services.js";
+import { createResponse } from "../utils.js";
 
-export const getAll = async (req, res, next) => {
-  try {
-    const response = await service.getAll();
-    res.status(200).json(response);
-  } catch (error) {
-    next(error.message);
-  }
-};
+const cartService = new CartServices();
 
-export const getById = async (req, res, next) => {
-  try {
-    const { idCart } = req.params;
-    console.log(`Fetching cart by ID: ${idCart}`);
-    const cart = await service.getById(idCart);
-    if (!cart) res.status(404).json({ msg: 'Cart not found' });
-    else res.json(cart);
-  } catch (error) {
-    console.error(`Error in getById controller: ${error.message}`);
-    next(error.message);
-  }
-};
+export default class CartController extends Controller {
+constructor(){super(CartServices)}
 
-export const create = async (req, res, next) => {
-  try {
-    const newCart = await service.create();
-    if (!newCart) res.status(404).json({ msg: "Error create cart!" });
-    else res.status(200).json(newCart);
-  } catch (error) {
-    next(error.message);
-  }
-};
 
-export const update = async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const cartUpd = await service.update(id, req.body);
-    if (!cartUpd) res.status(404).json({ msg: "Error update cart!" });
-    else res.status(200).json(cartUpd);
-  } catch (error) {
-    next(error.message);
-  }
-};
-
-export const remove = async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const cartDel = await service.remove(id);
-    if (!cartDel) res.status(404).json({ msg: "Error delete cart!" });
-    else res.status(200).json({ msg: `Cart id: ${id} deleted` });
-  } catch (error) {
-    next(error.message);
-  }
-};
-
-export const addProdToCart = async (req, res, next) => {
+addProdToCart = async (req, res, next) => {
   try {
     const { idCart } = req.params;
     const { idProd } = req.params;
@@ -69,7 +23,7 @@ export const addProdToCart = async (req, res, next) => {
   }
 };
 
-export const removeProdToCart = async (req, res, next) => {
+removeProdToCart = async (req, res, next) => {
   try {
     const { idCart } = req.params;
     const { idProd } = req.params;
@@ -84,7 +38,7 @@ export const removeProdToCart = async (req, res, next) => {
   }
 };
 
-export const updateProdQuantityToCart = async (req, res, next) => {
+updateProdQuantityToCart = async (req, res, next) => {
   try {
     const { idCart } = req.params;
     const { idProd } = req.params;
@@ -100,8 +54,7 @@ export const updateProdQuantityToCart = async (req, res, next) => {
     next(error.message);
   }
 };
-
-export const clearCart = async (req, res, next) => {
+clearCart = async (req, res, next) => {
   try {
     const { idCart } = req.params;
     const clearCart = await service.clearCart(
@@ -112,4 +65,64 @@ export const clearCart = async (req, res, next) => {
   } catch (error) {
     next(error.message);
   }
-};
+
+   };
+}
+
+
+
+// import * as service from "../service/cart.services.js";
+
+// export const getAll = async (req, res, next) => {
+//   try {
+//     const response = await service.getAll();
+//     res.status(200).json(response);
+//   } catch (error) {
+//     next(error.message);
+//   }
+// };
+
+// export const getById = async (req, res, next) => {
+//   try {
+//     const { idCart } = req.params;
+//     console.log(`Fetching cart by ID: ${idCart}`);
+//     const cart = await service.getById(idCart);
+//     if (!cart) res.status(404).json({ msg: 'Cart not found' });
+//     else res.json(cart);
+//   } catch (error) {
+//     console.error(`Error in getById controller: ${error.message}`);
+//     next(error.message);
+//   }
+// };
+
+// export const create = async (req, res, next) => {
+//   try {
+//     const newCart = await service.create();
+//     if (!newCart) res.status(404).json({ msg: "Error create cart!" });
+//     else res.status(200).json(newCart);
+//   } catch (error) {
+//     next(error.message);
+//   }
+// };
+
+// export const update = async (req, res, next) => {
+//   try {
+//     const { id } = req.params;
+//     const cartUpd = await service.update(id, req.body);
+//     if (!cartUpd) res.status(404).json({ msg: "Error update cart!" });
+//     else res.status(200).json(cartUpd);
+//   } catch (error) {
+//     next(error.message);
+//   }
+// };
+
+// export const remove = async (req, res, next) => {
+//   try {
+//     const { id } = req.params;
+//     const cartDel = await service.remove(id);
+//     if (!cartDel) res.status(404).json({ msg: "Error delete cart!" });
+//     else res.status(200).json({ msg: `Cart id: ${id} deleted` });
+//   } catch (error) {
+//     next(error.message);
+//   }
+// };
