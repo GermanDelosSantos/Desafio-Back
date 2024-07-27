@@ -2,10 +2,14 @@ import { Router } from "express";
 import { checkAuth } from "../midlewares/checkJwt.js";
 import { checkAdmin } from "../midlewares/checkAdmin.js";
 import CartController from '../controllers/cart.controllers.js'
+import TicketController from "../controllers/ticket.controller.js";
+const ticketController = new TicketController();
 const controller = new CartController();
 
 
 const router = Router();
+
+router.post('/purchase', [checkAuth], ticketController.generateTicket);
 
 router.get("/", [checkAuth, checkAdmin], controller.getAll);
 
@@ -19,11 +23,11 @@ router.delete("/:id", [checkAuth, checkAdmin], controller.delete);
 
 router.post("/products/:idProd", [checkAuth], controller.addProdToCart);
 
-router.delete("/:idCart/products/:idProd", [checkAuth], controller.removeProdToCart);
+router.delete("/products/:idProd", [checkAuth], controller.removeProdToCart);
 
-router.put("/:idCart/products/:idProd", [checkAuth], controller.updateProdQuantityToCart);
+router.put("/products/:idProd", [checkAuth], controller.updateProdQuantityToCart);
 
-router.delete("/clear/:idCart", [checkAuth], controller.clearCart);
+router.delete("/clear", [checkAuth], controller.clearCart);
 
 
 

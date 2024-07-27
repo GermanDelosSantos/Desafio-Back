@@ -70,7 +70,7 @@ export default class UserService extends Services {
 
   getUserById = async (id) => {
     try {
-      return await userRepository.getUserById(id);
+      return await userRepository.getUserById(id).populate('carts');
     } catch (error) {
       throw new Error(error);
     }
