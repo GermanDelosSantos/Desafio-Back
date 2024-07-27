@@ -10,6 +10,8 @@ const controllers = new UserController();
   const router = Router();
   router.post('/register', controllers.register);
 
+  router.get('/getall', controllers.getAll);
+
   router.post('/login', controllers.login);
   
   router.get('/profile', checkAuth, controllers.profile);

@@ -12,13 +12,11 @@ let persistence = process.argv[2];
 
 switch (persistence) {
     case 'fs':
-        console.log(persistence)
         prodDao = new ProductDaoFS('./src/persistence/daos/filesystem/products.json');
         // userDao = new UserDaoFS('./src/daos/....
         // cartDao = new
         break;
     case 'mongo':
-        console.log(persistence)
         initMongoDB();
         userDao = new UserDaoMongo();
         prodDao = new ProductDaoMongo();
@@ -29,9 +27,10 @@ switch (persistence) {
     //     prodDao = new ProductDaoSql();
     //     cartDao = new CartDaoSqlDB();
     default:
-        prodDao = new ProductDaoFS('./src/daos/filesystem/products.json');
-        // userDao = new UserDaoFS('./src/daos/....
-        // cartDao = new
+        // initMongoDB();
+        userDao = new UserDaoMongo();
+        prodDao = new ProductDaoMongo();
+        cartDao = new CartDaoMongoDB();
     break;
 }
 

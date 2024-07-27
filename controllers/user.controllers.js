@@ -1,7 +1,6 @@
 import Controllers from './class.controller.js';
 import UserService from '../service/user.services.js';
 import { createResponse } from '../utils.js';
-import { token } from 'morgan';
 
 const userService = new UserService();
 

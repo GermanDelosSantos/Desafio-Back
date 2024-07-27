@@ -1,11 +1,10 @@
-import { Router } from "express";
-import ProductController from "../controllers/product.controllers.js";
-import { checkAuth } from "../midlewares/checkJwt.js";
-import { checkAdmin } from "../midlewares/checkAdmin.js";
+import { Router } from 'express';
+import ProductController from '../controllers/product.controllers.js';
+import { checkAdmin } from '../midlewares/checkAdmin.js';
+import { checkAuth } from '../midlewares/checkJwt.js';
 const controller = new ProductController();
 
 const router = Router();
-
 
 router.get('/', [checkAuth], controller.getAll);
 

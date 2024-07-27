@@ -26,7 +26,7 @@ export default class UserService extends Services {
   async register(user) {
     try {
       const { email, password } = user;
-      const existUser = await this.dao.getByEmail(email);
+      const existUser = await this.dao.getUserByEmaill(email);
       if (!existUser) {
         const cartUser = await cartDao.create();
         if (

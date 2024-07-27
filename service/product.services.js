@@ -1,82 +1,10 @@
-import Services from './class.services.js';
-import factory from '../persistence/daos/mongodb/factory.js';
-const { productDao} = factory
-import ProductRepository from '../persistence/repository/product.repository.js';
+import Services from "./class.services.js";
+import ProductDaoMongo from "../persistence/daos/mongodb/product.dao.js";
 
-const prodRepository = new ProductRepository();
+const prodDao = new ProductDaoMongo();
 
 export default class ProductService extends Services {
-  constructor() {
-    super(productDao);
-  }
-
-  createProd = async(prod) => {
-    try {
-        return await prodRepository.createProd(prod);
-    } catch (error) {
-        throw new Error(error)
+    constructor(){
+        super(prodDao);
     }
-}
-
-getProdById = async(id)=>{
-    try {
-        return await prodRepository.getProdById(id);
-    } catch (error) {
-        throw new Error(error)
-    }
-}
-}
-
-// import ProductDaoFS from '../daos/filesystem/product.dao.js';
-// import {__dirname} from '../utils.js';
-// const prodDao = new ProductDaoFS(`${__dirname}/daos/filesystem/products.json`);
-// const prodDao = new ProductDaoMongoDB();
-
-
-// export const getAll = async (page, limit, name, sort) => {
-//   try {
-//     return await prodDao.getAll(page, limit, name, sort);
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
-
-// export const getById = async (id) => {
-//   try {
-//     const prod = await prodDao.getById(id);
-//     if (!prod) return false;
-//     else return prod;
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
-
-// export const create = async (obj) => {
-//   try {
-//     const newProd = await prodDao.create(obj);
-//     if (!newProd) return false;
-//     else return newProd;
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
-
-// export const update = async (id, obj) => {
-//   try {
-//     const prodUpd = await prodDao.update(id, obj);
-//     if (!prodUpd) return false;
-//     else return prodUpd;
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
-
-// export const remove = async (id) => {
-//   try {
-//     const prodDel = await prodDao.delete(id);
-//     if (!prodDel) return false;
-//     else return prodDel;
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
+};
