@@ -55,10 +55,10 @@ app.use(morgan('dev'));
 app.engine("handlebars", handlebars.engine());
 app.set("view engine", "handlebars");
 app.set("views", __dirname + "/views");
-app.use('/api', MainRouter.getRouter())
-// app.use('/carts', cartRouter);
-// app.use('/products', productRouter);
-// app.use('/users', userRouter);
+// app.use('/api', MainRouter.getRouter())
+app.use('/carts', cartRouter);
+app.use('/products', productRouter);
+app.use('/users', userRouter);
 
 const viewsRouter = createViewsRouter();
 

@@ -1,4 +1,5 @@
-import * as services from '../service/user.services.js';
+import UserService from "../service/user.services.js";
+const services = new UserService();
 import passport from "passport";
 import { Strategy as LocalStrategy } from 'passport-local';
 

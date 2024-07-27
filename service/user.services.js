@@ -1,9 +1,14 @@
-import Services from './class.services.js';
-import factory from '../persistence/daos/mongodb/factory.js';
-import  UserDao from '../persistence/daos/mongodb/user.dao.js';
-const  userDao  = new UserDao(); 
-import jwt from 'jsonwebtoken';
+import Services from "./class.services.js";
+import UserDaoMongo from "../persistence/daos/mongodb/user.dao.js";
+import jwt from "jsonwebtoken";
+import "dotenv/config";
 import { createHash, isValidPassword } from "../utils.js";
+import CartDaoMongo from "../persistence/daos/mongodb/cart.dao.js";
+import UserRepository from "../persistence/repository/user.repository.js";
+const userRepository = new UserRepository();
+
+const userDao = new UserDaoMongo();
+const cartDao = new CartDaoMongo()
 
 export default class UserService extends Services {
   constructor() {
@@ -23,17 +28,23 @@ export default class UserService extends Services {
       const { email, password } = user;
       const existUser = await this.dao.getByEmail(email);
       if (!existUser) {
-        if (email === process.env.EMAIL_ADMIN && password === process.env.PASS_ADMIN) {
+        const cartUser = await cartDao.create();
+        if (
+          email === process.env.EMAIL_ADMIN &&
+          password === process.env.PASS_ADMIN
+        ) {
           const newUser = await this.dao.create({
             ...user,
             password: createHash(password),
             role: "admin",
+            cart: cartUser._id,
           });
           return newUser;
         } else {
           const newUser = await this.dao.create({
             ...user,
             password: createHash(password),
+            cart: cartUser._id,
           });
           return newUser;
         }
@@ -42,31 +53,29 @@ export default class UserService extends Services {
     } catch (error) {
       throw new Error(error);
     }
-  };
-
-  getUserByEmail = async (email) => {
-    try {
-      return await this.dao.getByEmail(email);
-    } catch (error) {
-      throw new Error(error);
-    }
-  };
+  }
 
   async login(user) {
     try {
       const { email, password } = user;
-      const userExist = await this.dao.getByEmail(email);
+      const userExist = await this.dao.getUserByEmaill(email);
       if (!userExist) return null;
       const passValid = isValidPassword(password, userExist);
       if (!passValid) return null;
-      if(userExist && passValid) return this.generateToken(userExist);
+      if (userExist && passValid) return this.generateToken(userExist);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  getUserById = async (id) => {
+    try {
+      return await userRepository.getUserById(id);
     } catch (error) {
       throw new Error(error);
     }
   };
-
 }
-
 
 // import { UserModel } from "../daos/mongodb/models/user.model.js";
 // import UserDaoMongoDB from "../daos/mongodb/user.dao.js";
