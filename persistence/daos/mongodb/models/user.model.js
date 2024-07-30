@@ -30,7 +30,7 @@ const userSchema = new Schema({
       type: Boolean,
       default: false
   },
-  cart: {
+  carts: {
     type: Schema.Types.ObjectId,
     ref: "carts",
     default: []

@@ -2,6 +2,7 @@ import { Router } from "express";
 import * as messageService from '../service/message.services.js';
 import { isAuth } from "../midlewares/isAuth.js";
 // import * as productService from '../service/product.services.js';
+import { checkAuth } from "../midlewares/checkJwt.js";
 
 const router = (products) => {
     const route = Router();
@@ -34,7 +35,7 @@ const router = (products) => {
         res.render("login");
       });
       
-    route.get("/profile", isAuth, (req, res) => {
+    route.get("/profile", checkAuth, (req, res) => {
         console.log("req.user", req.user);
         const user = req.user.toObject();
         res.render("profile", { user });

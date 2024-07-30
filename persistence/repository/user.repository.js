@@ -11,7 +11,7 @@ export default class UserRepository {
 
     async getUserById(id) {
         try {
-          const user = await this.dao.getUserById(id);
+          const user = await this.dao.getUserById(id).populate('carts');
           return new UserDTO(user);
         } catch (error) {
           throw new Error(error);
