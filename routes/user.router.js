@@ -14,7 +14,10 @@ const controllers = new UserController();
 
   router.post('/login', controllers.login);
   
-  router.get('/profile', checkAuth, controllers.profile);
+  router.get("/current", checkAuth, (req, res) => {
+    const user = req.user.toObject();
+    res.render("profile", { user });
+  });
 
   router.get('/private', isAuth, (req, res)=>res.json({ msg: 'Ruta PRIVADA' }));
 

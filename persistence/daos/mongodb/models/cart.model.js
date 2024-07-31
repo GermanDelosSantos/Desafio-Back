@@ -14,6 +14,11 @@ export const cartSchema = new Schema({
       product: {
         type: Schema.Types.ObjectId,
         ref: "products" // Referencia al modelo de productos
+      },
+      users: {
+        type: Schema.Types.ObjectId,
+        ref: "users", // Referencia al modelo de usuarios
+      
       }
     }
   ]

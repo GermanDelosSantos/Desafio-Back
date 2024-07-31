@@ -36,7 +36,6 @@ const router = (products) => {
       });
       
     route.get("/profile", checkAuth, (req, res) => {
-        console.log("req.user", req.user);
         const user = req.user.toObject();
         res.render("profile", { user });
       });

@@ -3,6 +3,7 @@
     <div id="profileContainer">
         <p>{{user.first_name}} {{user.last_name}}</p>
         <p>Email: {{user.email}}</p>
+        <p>Carrito {{user.cart}}</p>
         <form action="/users/logout" method="POST">
         <button type="submit" id="profileButton">Cerrar sesión</button>
         </form>

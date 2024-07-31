@@ -18,16 +18,14 @@ export const checkAuth = async (req, res, next) => {
       const user = await userService.getById(decode.userId);
       if (!user) res.status(404).json({ msg: "User not found" });
       //REFRESH TOKEN
-      const now = Math.floor(Date.now() / 1000); // Tiempo actual en segundos
-      const tokenExp = decode.exp; // Tiempo de expiración del token
-      const timeUntilExp = tokenExp - now; // Tiempo hasta la expiración en segundos
+      const now = Math.floor(Date.now() / 1000); 
+      const tokenExp = decode.exp; 
+      const timeUntilExp = tokenExp - now; 
   
       if (timeUntilExp <= 300) {
-        // 300 segundos = 5 minutos
-        // Generar un nuevo token con un tiempo de expiración renovado
         const newToken = await userService.generateToken(user, "5m");
         console.log(">>>>>>SE REFRESCÓ EL TOKEN");
-        res.cookie('token', newToken, { httpOnly: true }) // Agregar el nuevo token a la cookie
+        res.cookie('token', newToken, { httpOnly: true }) 
       }
       req.user = user;
       next();
