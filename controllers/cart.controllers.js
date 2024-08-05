@@ -1,6 +1,7 @@
 import Controllers from "./class.controller.js";
 import CartService from '../service/cart.services.js';
 import { createResponse } from "../utils.js";
+import httpResponse from "../utils/httpresponse.js";
 const cartService = new CartService();
 
 export default class CartController extends Controllers{
@@ -10,14 +11,14 @@ export default class CartController extends Controllers{
   addProdToCart = async (req, res, next) => {
     try {
 
-      const { cart } = req.user;
+      const { carts } = req.user;
       const { idProd } = req.params;
       const newProdToUserCart = await this.service.addProdToCart(
-        cart,
+        carts,
         idProd,
       );
-      if (!newProdToUserCart) createResponse(res, 404, { msg: "Error add product to cart" });
-      else createResponse(res, 200, newProdToUserCart);
+      if (!newProdToUserCart) return httpResponse.NotFound(res, data);
+      else return httpResponse.Ok(res, newProdToUserCart);
     } catch (error) {
       next(error);
     }
@@ -31,8 +32,8 @@ export default class CartController extends Controllers{
         idCart,
         idProd,
       );
-      if (!delProdToUserCart) createResponse(res, 404, { msg: "cart or prod not existant" });
-      else createResponse(res, 200, {msg: `product ${idProd} deleted to cart`});
+      if (!delProdToUserCart) return httpResponse.NotFound(res, data);
+      else return httpResponse.Ok(res, idProd);
     } catch (error) {
       next(error);
     }
@@ -48,8 +49,8 @@ export default class CartController extends Controllers{
         idProd,
         quantity
       );
-      if (!updateProdQuantity) createResponse(res, 404, { msg: "cart or prod not existant" });
-      else createResponse(res, 200, updateProdQuantity);
+      if (!updateProdQuantity) return httpResponse.NotFound(res, data);
+      else return httpResponse.Ok(res, updateProdQuantity);
     } catch (error) {
       next(error);
     }
@@ -61,8 +62,8 @@ export default class CartController extends Controllers{
       const clearCart = await this.service.clearCart(
         idCart,
       );
-      if (!clearCart) createResponse(res, 404, { msg: "Error clear cart" });
-      else createResponse(res, 200, clearCart);
+      if (!clearCart) return httpResponse.NotFound(res, data);
+      else return httpResponse.Ok(res, clearCart);
     } catch (error) {
       next(error);
     }

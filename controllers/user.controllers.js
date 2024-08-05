@@ -1,6 +1,7 @@
 import Controllers from './class.controller.js';
 import UserService from '../service/user.services.js';
 import { createResponse } from '../utils.js';
+import httpResponse from '../utils/httpresponse.js';
 
 const userService = new UserService();
 
@@ -12,7 +13,7 @@ export default class UserController extends Controllers {
   register = async (req, res, next) => {
     try {
       const data = await this.service.register(req.body);
-      !data ? createResponse(res, 404, data) : createResponse(res, 200, data);
+      !data ? httpResponse.NotFound(res, data) : httpResponse.Ok(res, data);
     } catch (error) {
       next(error);
     }
@@ -22,7 +23,7 @@ export default class UserController extends Controllers {
     try {
       const token = await this.service.login(req.body);
       res.cookie('token', token, { httpOnly: true });
-      !token ? createResponse(res, 404, token) : createResponse(res, 200, token);
+      !token ? httpResponse.NotFound(res, data) : httpResponse.Ok(res, token);
       console.log(`el token es ${token}`);
     } catch (error) {
       next(error);
@@ -46,7 +47,7 @@ export default class UserController extends Controllers {
             role
           }
         })
-      } else createResponse(res, 401, { msg: 'Unhautorized' })
+      } else return httpResponse.Unauthorized(res, data);
     } catch (error) {
       next(error);
     }

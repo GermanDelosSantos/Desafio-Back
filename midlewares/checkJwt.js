@@ -2,7 +2,6 @@ import jwt from 'jsonwebtoken';
 import UserService from '../service/user.services.js';
 const userService = new UserService();
 import 'dotenv/config';
-import { createResponse } from '../utils.js';
 /**
  * Middleware que verifica si el token es válido a través de la cookie 'token'
  * @param {*} req 
