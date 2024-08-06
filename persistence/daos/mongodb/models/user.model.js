@@ -30,11 +30,11 @@ const userSchema = new Schema({
       type: Boolean,
       default: false
   },
-  carts: [{
+  cart: {
     type: Schema.Types.ObjectId,
     ref: "carts",
     default: []
-  }]
+  }
 });
 
 export const UserModel = model('Users',userSchema)

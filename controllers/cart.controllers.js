@@ -11,10 +11,10 @@ export default class CartController extends Controllers{
   addProdToCart = async (req, res, next) => {
     try {
 
-      const { carts } = req.user;
+      const { cart } = req.user;
       const { idProd } = req.params;
       const newProdToUserCart = await this.service.addProdToCart(
-        carts,
+        cart,
         idProd,
       );
       if (!newProdToUserCart) return httpResponse.NotFound(res, data);
