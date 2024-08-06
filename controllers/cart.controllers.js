@@ -49,7 +49,7 @@ export default class CartController extends Controllers{
         idProd,
         quantity
       );
-      if (!updateProdQuantity) return httpResponse.NotFound(res, data);
+      if (!updateProdQuantity) return httpResponse.MissingData(res, data);
       else return httpResponse.Ok(res, updateProdQuantity);
     } catch (error) {
       next(error);

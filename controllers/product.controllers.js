@@ -14,7 +14,7 @@ export default class ProductController extends Controllers {
           res.json(await prodService.createProductsMock(cant))
       
         } catch (error) {
-          console.log(error);
+          next(error);
         }
       };
 };

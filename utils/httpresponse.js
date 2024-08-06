@@ -4,6 +4,7 @@ const HttpStatus = {
     UNAUTHORIZED: 401,
     FORBIDDEN: 403,
     INTERNAL_SERVER_ERROR: 500,
+    MISSING_DATA: 428,
   };
   
   const errorsDictionary = {
@@ -11,7 +12,9 @@ const HttpStatus = {
       UNAUTHORIZED: "Unauthorized",
       FORBIDDEN: "Forbidden",
       INTERNAL_SERVER_ERROR: "Internal Server Error",
-      NOT_FOUND: "Not found"
+      NOT_FOUND: "Not found",
+      MISSING_DATA : "Missing data",
+
   }
   
   export class HttpResponse {
@@ -52,6 +55,14 @@ const HttpStatus = {
         status: HttpStatus.INTERNAL_SERVER_ERROR,
         message: errorsDictionary.INTERNAL_SERVER_ERROR,
          data,
+      });
+    }
+
+    MissingData(res,data) {
+      return res.status(HttpStatus.MISSING_DATA).json({
+        status: HttpStatus.MISSING_DATA,
+        message: errorsDictionary.MISSING_DATA,
+        data,
       });
     }
   }

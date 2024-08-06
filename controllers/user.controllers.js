@@ -13,7 +13,7 @@ export default class UserController extends Controllers {
   register = async (req, res, next) => {
     try {
       const data = await this.service.register(req.body);
-      !data ? httpResponse.NotFound(res, data) : httpResponse.Ok(res, data);
+      !data ? httpResponse.MissingData(res, data) : httpResponse.Ok(res, data);
     } catch (error) {
       next(error);
     }
