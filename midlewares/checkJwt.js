@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 import UserService from '../service/user.services.js';
 const userService = new UserService();
 import 'dotenv/config';
+import {logger} from "../logs/logger.js";
 /**
  * Middleware que verifica si el token es válido a través de la cookie 'token'
  * @param {*} req 
@@ -23,7 +24,7 @@ export const checkAuth = async (req, res, next) => {
   
       if (timeUntilExp <= 300) {
         const newToken = await userService.generateToken(user, "5m");
-        console.log(">>>>>>SE REFRESCÓ EL TOKEN");
+        logger.info(">>>>>>SE REFRESCÓ EL TOKEN");
         res.cookie('token', newToken, { httpOnly: true }) 
       }
       req.user = user;

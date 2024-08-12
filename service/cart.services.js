@@ -3,6 +3,8 @@ import ProductDaoMongoDB from "../persistence/daos/mongodb/product.dao.js";
 const prodDao = new ProductDaoMongoDB();
 import CartDaoMongoDB from "../persistence/daos/mongodb/cart.dao.js";
 const cartDao = new CartDaoMongoDB();
+import {logger} from "../logs/logger.js";
+
 
 export default class CartServices extends Services {
   constructor() {
@@ -12,12 +14,12 @@ export default class CartServices extends Services {
   addProdToCart = async (cartId, prodId) => {
     try {
       const existCart = await this.getById(cartId);
-      console.log("existcart-->", existCart);
+      logger.info("existcart-->", existCart);
 
       if (!existCart) return null;
   
       const existProd = await prodDao.getById(prodId);
-      console.log("existProd-->", existProd);
+      logger.info("existProd-->", existProd);
       if (!existProd) return null;
 
       return await this.dao.addProdToCart(cartId, prodId);
@@ -41,11 +43,11 @@ export default class CartServices extends Services {
   updateProdQuantityToCart = async (cartId, prodId, quantity) => {
     try {
       const existCart = await this.getById(cartId);
-      console.log("existCart-->", existCart);
+      logger.info("existCart-->", existCart);
       if(!existCart) return null;
   
       const existProdInCart = await this.dao.existProdInCart(cartId, prodId);
-      console.log("existProd-->", existProdInCart);
+      logger.info("existProd-->", existProdInCart);
       if (!existProdInCart) return null;
   
       return await this.dao.updateProdQuantityToCart(cartId, prodId, quantity);
@@ -57,7 +59,7 @@ export default class CartServices extends Services {
   clearCart = async (cartId) => {
     try {
       const existCart = await this.getById(cartId);
-      console.log("existCart-->", existCart);
+      logger.info("existCart-->", existCart);
       if (!existCart) return null;
       return await this.dao.clearCart(cartId);
     } catch (error) {

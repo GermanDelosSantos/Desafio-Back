@@ -22,6 +22,11 @@ import './passaport/local-srtategy.js';
 import './passaport/github-strategy.js'
 import 'dotenv/config';
 import './db/database.js';
+
+import {logger} from "./logs/logger.js";
+
+
+
 // import * as productService from './service/product.services.js';
 const MainRouter = new mainRouter();
 const MONGO_URL = "mongodb+srv://noiconuf:admin@cluster0.qu7hol7.mongodb.net/coderBack?retryWrites=true&w=majority&appName=Cluster0"
@@ -70,7 +75,7 @@ const PORT = process.env.PORT || 3000;
 
 initMongoDB();
 
-const httpServer = app.listen(PORT, () => console.log(`Puert ok on ${PORT}`));
+const httpServer = app.listen(PORT, () => logger.info(`Puert ok on ${PORT}`));
 
 const socketServer = new Server(httpServer);
 
