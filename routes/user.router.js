@@ -3,7 +3,7 @@ import passport from 'passport';
 import { isAuth } from "../midlewares/isAuth.js";
 import UserController from '../controllers/user.controllers.js';
 import { checkAuth } from '../midlewares/checkJwt.js';
-
+import { logger } from '../logs/logger.js'
 const controllers = new UserController();
 
   
@@ -29,6 +29,18 @@ const controllers = new UserController();
       successRedirect: '/profile', 
       passReqToCallback: true
   }));
+
+  router.get('/logger-test', checkAuth, async (req, res) => {
+    try {
+      logger.silly('logger silly')
+      logger.debug('logger debug')
+      logger.info('logger info')
+      logger.warn('logger warn')
+      logger.error('logger error')
+    } catch (error) {
+      res.status(500).json({ message: error.message})      
+    }
+  })
   
   // router.post('/logout', controllers.logout);
 
