@@ -18,27 +18,21 @@ export default class ProductController extends Controllers {
     }
   };
 
-  createProductPremium = async (req, res) => {
+  async createProductPremium(req, res, next) {
     try {
-      const user = req.user;
+      const { name, description, price, stock } = req.body;
+      const owner = req.user.email; // Asumiendo que el correo del usuario es el valor para el campo owner
 
-      if (user.role !== 'premium') {
-        return res.status(403).json({ message: 'Solo los usuarios premium pueden crear productos' });
-      }
+      const newProduct = await prodService.create({ name, description, price, stock , owner });
 
-      const newProduct = new Product({
-        ...req.body,
-        owner: user.email || 'admin'
-      });
-
-      await newProduct.create();
-      res.status(201).json(newProduct);
+      res.status(201).json({ message: 'Producto creado correctamente', product: newProduct });
     } catch (error) {
-      res.status(500).json({ message: 'Error al crear el producto' });
+      console.error(error);
+      next(error);
     }
-  };
+  }
 
-  deleteProduct = async (req, res) => {
+  deleteProduct = async (req, res, next) => {
     try {
       const product = req.params;
       const user = req.user;
@@ -51,10 +45,10 @@ export default class ProductController extends Controllers {
         return res.status(403).json({ message: 'No tienes permiso para eliminar este producto' });
       }
 
-      await product.remove();
+      await prodService.remove();
       res.status(200).json({ message: 'Producto eliminado' });
     } catch (error) {
-      res.status(500).json({ message: 'Error al eliminar el producto' });
+      next(error);
     }
   };
 };
