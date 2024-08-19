@@ -10,6 +10,12 @@ export default class CartController extends Controllers{
   }
   addProdToCart = async (req, res, next) => {
     try {
+      const user =  req.user;
+      const product = req.params;
+  
+      if (product.owner === user.email) {
+        return res.status(400).json({ message: 'No puedes agregar tu propio producto al carrito' });
+      }
 
       const { cart } = req.user;
       const { idProd } = req.params;

@@ -41,6 +41,10 @@ const controllers = new UserController();
       res.status(500).json({ message: error.message})      
     }
   })
+
+  router.post('/resset-pass', checkAuth, controllers.generateResetPass)
+
+  router.put('/change-role',checkAuth, controllers.changeUserRole);
   
   // router.post('/logout', controllers.logout);
 

@@ -5,6 +5,7 @@ import "dotenv/config";
 import { createHash, isValidPassword } from "../utils.js";
 import CartDaoMongo from "../persistence/daos/mongodb/cart.dao.js";
 import UserRepository from "../persistence/repository/user.repository.js";
+import { sendMail } from "./mailling.services.js";
 const userRepository = new UserRepository();
 
 const userDao = new UserDaoMongo();
@@ -39,6 +40,7 @@ export default class UserService extends Services {
             role: "admin",
             cart: cartUser._id,
           });
+          await sendMail(user, "register");
           return newUser;
         } else {
           const newUser = await this.dao.create({
@@ -46,6 +48,7 @@ export default class UserService extends Services {
             password: createHash(password),
             cart: cartUser._id,
           });
+          await sendMail(user, "register");
           return newUser;
         }
       }
@@ -75,7 +78,31 @@ export default class UserService extends Services {
       throw new Error(error);
     }
   };
-}
+
+  async getById(id) {
+    return await this.dao.getById(id);}
+
+  async generateResetPass(user) {
+    try {
+      return this.generateToken(user, '1h');
+    } catch (error) {
+      throw new Error(error)
+    }
+  }
+
+  async updatePass(pass, user){
+    try {
+      //verificar que la nueva contraseña no sea igual a la anterior
+      const isEqual = isValidPassword(pass, user);
+      if(isEqual) return null;
+      const newPass = createHash(pass);
+      return await this.dao.update(user._id, { password: newPass });
+    } catch (error) {
+      throw new Error(error)
+    }
+  }
+
+};
 
 // import { UserModel } from "../daos/mongodb/models/user.model.js";
 // import UserDaoMongoDB from "../daos/mongodb/user.dao.js";

@@ -3,7 +3,7 @@ import UserService from '../service/user.services.js';
 import { createResponse } from '../utils.js';
 import httpResponse from '../utils/httpresponse.js';
 import {logger} from "../logs/logger.js";
-
+import { sendMail } from '../service/mailling.services.js';
 
 const userService = new UserService();
 
@@ -55,4 +55,62 @@ export default class UserController extends Controllers {
     }
 
   }
+  generateResetPass = async(req, res, next) => {
+    try {
+      const user = req.user;
+      const token = await userService.generateResetPass(user);
+      if(token){
+        await sendMail(user, 'resetPass', token);
+        res.cookie('tokenpass', token);
+        createResponse(res, 200, 'Email reset pass send OK')
+      } else createResponse(res, 404, 'error email reset pass send')
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async updatePass(req, res,next){
+    try {
+      const user = req.user;
+      const { pass } = req.body;
+      const { tokenpass } = req.cookies;
+      if(!tokenpass) return createResponse(res, 401, 'Unhautorized');
+      const updPass = await userService.updatePass(pass, user);
+      if(!updPass) return createResponse(res, 404, 'cannot be the same')
+      res.clearCookie('tokenpass');
+      return createResponse(res, 200, updPass);
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async changeUserRole(req, res) {
+    try {
+      const { userId, newRole } = req.body;
+
+      const currentUser = req.user;
+      if (currentUser.role !== 'admin') {
+        return res.status(403).json({ message: 'No tienes permiso para realizar esta acción' });
+      }
+
+      if (!['user', 'premium'].includes(newRole)) {
+        return res.status(400).json({ message: 'Rol no válido' });
+      }
+
+      const user = await userService.getById(userId);
+
+      if (!user) {
+        return res.status(404).json({ message: 'Usuario no encontrado' });
+      }
+
+      user.role = newRole;
+      await user.save(); // Esto debe funcionar si `user` es una instancia del modelo Mongoose
+
+      res.status(200).json({ message: 'Rol actualizado correctamente', user });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Error al actualizar el rol' });
+    }
+  }
+
 };

@@ -20,8 +20,9 @@ const userSchema = new Schema({
       type: String,
   },
   role: {
-      type: String,
-      default: 'user'
+    type: String,
+    enum: ['user', 'premium', 'admin'],
+    default: 'user'
   },
   image: {
     type: String
@@ -33,7 +34,7 @@ const userSchema = new Schema({
   cart: {
     type: Schema.Types.ObjectId,
     ref: "carts",
-    default: []
+    default: null,
   }
 });
 

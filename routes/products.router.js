@@ -12,6 +12,8 @@ router.get('/:id', [checkAuth], controller.getById);
 
 router.post('/', [checkAuth, checkAdmin], controller.create);
 
+router.post('/premium', [checkAuth], controller.createProductPremium);
+
 router.post('/mockingproducts', [checkAuth, checkAdmin], controller.createProductsMock);
 
 router.put('/:id', [checkAuth, checkAdmin], controller.update);
