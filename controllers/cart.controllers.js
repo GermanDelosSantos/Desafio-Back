@@ -10,25 +10,40 @@ export default class CartController extends Controllers{
   }
   addProdToCart = async (req, res, next) => {
     try {
-      const user =  req.user;
-      const product = req.params;
-  
-      if (product.owner === user.email) {
-        return res.status(400).json({ message: 'No puedes agregar tu propio producto al carrito' });
-      }
-
+      // const { idCart } = req.params;
+      // console.log(req.user)
       const { cart } = req.user;
       const { idProd } = req.params;
       const newProdToUserCart = await this.service.addProdToCart(
         cart,
         idProd,
       );
-      if (!newProdToUserCart) return httpResponse.NotFound(res, data);
-      else return httpResponse.Ok(res, newProdToUserCart);
+      if (!newProdToUserCart) createResponse(res, 404, { msg: "Error add product to cart" });
+      else createResponse(res, 200, newProdToUserCart);
     } catch (error) {
       next(error);
     }
   };
+
+  async addProductToCart(req, res, next) {
+    try {
+      const { cart} = req.user;
+      const {idProd} = req.params;
+      // const { cartId, productId } = req.body;
+      const userEmail = req.user.email;
+  
+      const result = await cartService.addProdToCart(
+        cart, idProd, userEmail
+      );
+  
+      if (!result) createResponse(res, 404, {msg: 'Error add product to cart'});
+      else createResponse(res, 200, result);
+    } catch (error) {
+      console.error('Error en addProductToCart:', error.message); // Agrega más detalles al error
+      next(error);
+    }
+  }
+
 
   removeProdToCart = async (req, res, next) => {
     try {
