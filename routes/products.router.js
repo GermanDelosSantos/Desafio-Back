@@ -20,4 +20,6 @@ router.put('/:id', [checkAuth, checkAdmin], controller.update);
 
 router.delete('/:id', [checkAuth, checkAdmin], controller.delete);
 
+router.delete('/premium-delete/:id', [checkAuth, checkAdmin], controller.deleteProduct);
+
 export default router;

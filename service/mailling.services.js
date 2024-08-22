@@ -12,7 +12,7 @@ const transporter = createTransport({
 });
 
 const createMsgRegister = (first_name) =>
-  `<h1>Hola ${first_name}, ¡Bienvenido/a a Coderhouse!</h1>`;
+  `<h1>Hola ${first_name}, ¡Bienvenido/a a Desbordadas</h1>`;
 
 const createMsgReset = (first_name) => {
   return `<p>¡Hola ${first_name}! Hacé click <a href="http://localhost:8080/new-pass">AQUÍ</a> 

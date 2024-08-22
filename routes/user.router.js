@@ -19,6 +19,8 @@ const controllers = new UserController();
     res.render("profile", { user });
   });
 
+  router.put('/new-password', checkAuth, controllers.updatePass);
+
   router.get('/private', isAuth, (req, res)=>res.json({ msg: 'Ruta PRIVADA' }));
 
 

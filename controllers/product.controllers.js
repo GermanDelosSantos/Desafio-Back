@@ -34,8 +34,8 @@ export default class ProductController extends Controllers {
 
   deleteProduct = async (req, res, next) => {
     try {
-      const product = req.params;
-      const user = req.user;
+      const {product} = req.params;
+      const {user} = req.user;
 
       if (!product) {
         return res.status(404).json({ message: 'Producto no encontrado' });
