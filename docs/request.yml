@@ -1,0 +1,107 @@
+components:
+  schemas:
+    User:
+      type: object
+      required:
+        - first_name
+        - last_name
+        - age
+        - email
+        - password
+      properties:
+        first_name:
+          type: string
+          description: Primer nombre del usuario
+        last_name:
+          type: string
+          description: Apellido del usuario
+        age:
+          type: integer
+          description: Edad del usuario
+        email:
+          type: string
+          description: Dirección de correo electrónico
+        password:
+          type: string
+          description: Contraseña
+
+    login: 
+      type: object
+      required:   
+        - email
+        - password
+      properties:  
+        email:
+          type: string
+          description: Email del usuario 
+        password:
+          type: string
+          description: Password del usuario
+      example:
+        email: juan@mail.com
+        password: abc123def456
+
+    Product:
+      type: object
+      required:
+        - name
+        - description
+        - price
+        - stock
+      properties:
+        name:
+          type: string
+          description: Nombre del producto
+        description:
+          type: string
+          description: Descripción del producto
+        price:
+          type: number
+          description: Precio del producto
+        stock:
+          type: number
+          description: Stock del producto
+      example:
+        name: Producto 1
+        description: Descripción del producto 1
+        price: 10.99
+        stock: 100
+
+    Cart:
+      type: object
+      required:
+        - userId
+        - products
+      properties:
+        userId:
+          type: string
+          description: ID del usuario al que pertenece el carrito
+          example: "64e538fa59dc7d70e73d8cac"
+        products:
+          type: array
+          items:
+            type: object
+            properties:
+              productId:
+                type: string
+                description: ID del producto en el carrito
+                example: "64e538fa59dc7d70e73d8cad"
+              quantity:
+                type: integer
+                description: Cantidad de este producto en el carrito
+                example: 2
+
+    AddProductToCart:
+      type: object
+      required:
+        - productId
+        - quantity
+      properties:
+        productId:
+          type: string
+          description: ID del producto a agregar al carrito
+          example: "64e538fa59dc7d70e73d8cad"
+        quantity:
+          type: integer
+          description: Cantidad del producto a agregar
+          example: 1

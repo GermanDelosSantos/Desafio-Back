@@ -22,9 +22,10 @@ import './passaport/local-srtategy.js';
 import './passaport/github-strategy.js'
 import 'dotenv/config';
 import './db/database.js';
-
+import swaggerUi from'swagger-ui-express'
+import swaggerJSDoc from 'swagger-jsdoc';
 import {logger} from "./logs/logger.js";
-
+import { info } from'./docs/info.js'
 
 
 // import * as productService from './service/product.services.js';
@@ -45,6 +46,9 @@ const storeConfig = {
 
 const app = express();
 
+const specs = swaggerJSDoc(info);
+
+
 app.use(express.static(__dirname + '/public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -61,6 +65,7 @@ app.engine("handlebars", handlebars.engine());
 app.set("view engine", "handlebars");
 app.set("views", __dirname + "/views");
 // app.use('/api', MainRouter.getRouter())
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(specs));
 app.use('/carts', cartRouter);
 app.use('/products', productRouter);
 app.use('/users', userRouter);

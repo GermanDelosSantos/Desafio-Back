@@ -1,0 +1,115 @@
+components:
+  schemas:
+    UserResponse:
+      type: object
+      properties: 
+        status:
+          type: number
+          description: Código de estado de la petición
+        message:
+          type: string
+          description: Estado de la petición
+        data:
+          type: string
+          description: Token del usuario autenticado
+      example:
+        status: 200
+        message: Success
+        data: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGU1MzZhZjU5ZGM3ZDcwZTczZDhjYWMiLCJpYXQiOjE2OTMzOTMzODIsImV4cCI6MTY5MzM5NDI4Mn0.3t3rqyv_3CPzd6yNnJgPvifmw2IBvY0Il7eqc4Zgh_w    
+
+    UserProfileResponse:
+      type: object
+      properties:
+        status:
+          type: number
+          description: Código de estado de la petición
+        message:
+          type: string
+          description: Estado de la petición
+        data:
+          type: object
+          description: Datos del usuario autenticado
+      example:
+        status: 200
+        message: Success
+        data: data
+
+    ProductResponse:
+      type: object
+      properties:
+        status:
+          type: number
+          description: Código de estado de la respuesta
+          example: 200
+        message:
+          type: string
+          description: Mensaje de la respuesta
+          example: "Success"
+        data:
+          $ref: '#/components/schemas/Product'
+
+    ProductListResponse:
+      type: object
+      properties:
+        status:
+          type: number
+          description: Código de estado de la respuesta
+          example: 200
+        message:
+          type: string
+          description: Mensaje de la respuesta
+          example: "Lista de productos obtenida con éxito"
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+
+    CartResponse:
+      type: object
+      properties:
+        status:
+          type: number
+          description: Código de estado de la respuesta
+          example: 200
+        message:
+          type: string
+          description: Mensaje de la respuesta
+          example: "Success"
+        data:
+          $ref: '#/components/schemas/Cart'
+
+    CartListResponse:
+      type: object
+      properties:
+        status:
+          type: number
+          description: Código de estado de la respuesta
+          example: 200
+        message:
+          type: string
+          description: Mensaje de la respuesta
+          example: "Lista de carritos obtenida con éxito"
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Cart'
+
+    AddProductResponse:
+      type: object
+      properties:
+        status:
+          type: number
+          description: Código de estado de la respuesta
+          example: 200
+        message:
+          type: string
+          description: Mensaje de la respuesta
+          example: "Producto agregado al carrito con éxito"
+        data:
+          $ref: '#/components/schemas/Cart'
+
+  securitySchemes:
+    BearerAuth: 
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
