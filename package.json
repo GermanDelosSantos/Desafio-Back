@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "start": "node .",
-    "dev": "nodemon ."
+    "dev": "nodemon .",
+    "test:node": "node ./test/daos/test.dao.js"
   },
   "repository": {
     "type": "git",
@@ -45,6 +46,8 @@
     "winston": "^3.14.1"
   },
   "devDependencies": {
-    "nodemon": "^3.1.0"
+    "chai": "^5.1.1",
+    "nodemon": "^3.1.0",
+    "supertest": "^7.0.0"
   }
 }

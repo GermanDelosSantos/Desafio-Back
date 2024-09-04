@@ -1,4 +1,4 @@
-import  httpResponse  from "../utils/httpresponse.js";
+import  httpResponse  from "../src/utils/httpresponse.js";
 import {logger} from "../logs/logger.js";
 
 export const errorHandler = (error, req, res, next) => {
