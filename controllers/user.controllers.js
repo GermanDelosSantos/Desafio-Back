@@ -1,7 +1,7 @@
 import Controllers from './class.controller.js';
 import UserService from '../service/user.services.js';
 import { createResponse } from '../utils.js';
-import httpResponse from '../src/utils/httpresponse.js';
+import httpResponse from '../utils/httpresponse.js';
 import {logger} from "../logs/logger.js";
 import { sendMail } from '../service/mailling.services.js';
 

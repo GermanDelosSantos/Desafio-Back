@@ -1,7 +1,7 @@
 import Services from "./class.services.js";
 import ProductDaoMongo from "../persistence/daos/mongodb/product.dao.js";
 import UserDao from "../persistence/daos/mongodb/user.dao.js";
-import { generateFakerProduct } from '../src/utils/product.utils.js'
+import { generateFakerProduct } from '../utils/product.utils.js'
 const prodDao = new ProductDaoMongo();
 const userDao = new UserDao();
 

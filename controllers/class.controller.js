@@ -1,5 +1,5 @@
 import { createResponse } from '../utils.js';
-import httpResponse from '../src/utils/httpresponse.js';
+import httpResponse from '../utils/httpresponse.js';
 
 export default class Controllers {
   constructor(service) {

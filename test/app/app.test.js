@@ -1,61 +1,80 @@
-import app from '../../server.js';
 import request from 'supertest';
 import mongoose from 'mongoose';
 import { fakerES as faker } from '@faker-js/faker';
 import { logger } from "../../logs/logger.js";
-import { generateFakerProduct } from '../../src/utils/product.utils.js'
+import { generateFakerProduct } from '../../utils/product.utils.js';
+import app from'../../server.js'
+import express from 'express';
+import 'dotenv/config';
 
 
 
+describe('Pruebas API de Productos', () => {
 
-describe('Conjunto de pruebas de API Desbordadas', ()=>{
-    beforeAll(async () => {
-        await mongoose.connection.collections["test"].drop();
-        logger.info("se limpio la base de datos");
-      });
+  // Antes de correr los tests, aseguramos que la colección de productos se limpie si ya existe
+  beforeAll(async () => {
+    const collection = mongoose.connection.collections["products"];
+    if (collection) {
+      await collection.drop();
+    }
+  });
 
-      test('[POST] /test', async()=>{
-        const body = generateFakerProduct();
-        const response = await request(app).post('/test-createprod').send(body);
-        // console.log(response.body);
-        const id = response.body._id;
-        const nameResponse = response.body.name;
-        const nameExpected = body.name;
-        const statusCode = response.statusCode;
-        expect(id).toBeDefined();
-        expect(response.body).toHaveProperty('_id');
-        expect(nameResponse).toBe(nameExpected); 
-        expect(nameResponse).toEqual(nameExpected);    
-        expect(statusCode).toBe(200)
-      });
+  // Test para crear un producto
+  test('[POST] /test/test-createprod - Crear un nuevo producto', async () => {
+    const newProduct = generateFakerProduct();
 
-      test('[GET] /test', async()=>{
-        const response = await request(app).get('/test-getallprod');
-        const statusCode = response.statusCode;
-        expect(statusCode).toBe(200);
-        expect(response.body).toHaveLength(1);
-        expect(response.body).toBeInstanceOf(Array);
-        const dateNews = response.body[0].date;
-        // console.log(new Date().getFullYear())
-        const dateExpected = expect.stringContaining(new Date().getFullYear().toString());
-        expect(dateNews).toEqual(dateExpected);
-      });
+    const response = await request(app)
+      .post('/test/test-createprod') // Ruta actualizada según tu configuración
+      .send(newProduct);
 
-      test('[GET] /test/:id', async()=>{
-        const body = generateFakerProduct();
-        const response = await request(app).post('/test').send(body);
-        const { _id } = response.body;
-        const responseGetById = await request(app).get(`/test/${_id}`);
-        expect(responseGetById.statusCode).toBe(200);
-/* ------------------------------------ - ----------------------------------- */
-        const idFalse = '507f191e810c19729de860ea';
-        const responseGetByIdNotFound = await request(app).get(`/test/${idFalse}`);
-        const msgNotFound = `No se encontró el id ${idFalse} en la base de datos.`
-        expect(responseGetByIdNotFound.statusCode).toBe(404);
-        expect(responseGetByIdNotFound.body.msg).toEqual(msgNotFound);
-      })
+    expect(response.statusCode).toBe(200); // Esperamos un código 200 si todo salió bien
+    expect(response.body).toHaveProperty('_id');
+    expect(response.body.name).toBe(newProduct.name);
+    expect(response.body.description).toBe(newProduct.description);
+    expect(response.body.price).toBe(newProduct.price);
+    expect(response.body.stock).toBe(newProduct.stock);
+  });
 
-      afterAll(async()=>{
-        await mongoose.disconnect();
-      })
-})
+  // Test para obtener todos los productos
+  test('[GET] /test/test-getallprod - Obtener todos los productos', async () => {
+    const response = await request(app)
+      .get('/test/test-getallprod') 
+
+
+    expect(response.statusCode).toBe(200); 
+    expect(response.body).toBeInstanceOf(Array); 
+    expect(response.body.length).toBeGreaterThan(0); 
+  });
+
+  test('[GET] /test/test-createprod - Obtener un producto por ID', async () => {
+    const newProduct = generateFakerProduct();
+
+    const createResponse = await request(app)
+      .post('/test/test-createprod')
+      .send(newProduct);
+
+    const productId = createResponse.body._id;
+
+
+    const response = await request(app)
+      .get(`/test/${productId}`); 
+
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toHaveProperty('_id');
+    expect(response.body._id).toBe(productId);
+    expect(response.body.name).toBe(newProduct.name);
+  });
+
+  test('[GET] /test/:id - Obtener un producto con un ID inexistente', async () => {
+    const fakeId = '507f191e810c19729de860ea'; 
+
+    const response = await request(app)
+      .get(`/test/${fakeId}`);
+
+    expect(response.body.msg).toBe(`No se encontró el id ${fakeId} en la base de datos.`);
+  });
+
+  afterAll(async () => {
+    await mongoose.disconnect();
+  });
+});

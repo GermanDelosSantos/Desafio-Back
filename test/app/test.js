@@ -1,6 +1,6 @@
 import { describe, test, before } from "node:test";
 import assert from "node:assert";
-import { generateFakerProduct } from '../../src/utils/product.utils.js'
+import { generateFakerProduct } from '../../utils/product.utils.js'
 import { logger } from "../../logs/logger.js";
 
 

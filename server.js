@@ -11,6 +11,7 @@ import cartRouter from './routes/cart.router.js';
 import productRouter from './routes/products.router.js';
 import createViewsRouter from './routes/view.router.js';
 import userRouter from './routes/user.router.js';
+import testRouter from './routes/test.router.js';
 import handlebars from 'express-handlebars';
 // import * as messageService from './service/message.services.js';
 import cookieParser from 'cookie-parser';
@@ -69,6 +70,7 @@ app.use('/docs', swaggerUi.serve, swaggerUi.setup(specs));
 app.use('/carts', cartRouter);
 app.use('/products', productRouter);
 app.use('/users', userRouter);
+app.use('test', testRouter);
 
 const viewsRouter = createViewsRouter();
 
@@ -79,6 +81,8 @@ app.use(errorHandler);
 const PORT = process.env.PORT || 3000;
 
 initMongoDB();
+
+export default app;
 
 const httpServer = app.listen(PORT, () => logger.info(`Puert ok on ${PORT}`));
 
