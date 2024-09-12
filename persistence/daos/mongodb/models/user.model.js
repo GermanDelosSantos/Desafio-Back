@@ -38,8 +38,11 @@ const userSchema = new Schema({
   },
   last_connection:{
     type: Date,
-    default: Date.now()
-  }
+  },
+  active: {
+    type: Boolean,
+    default: true,
+  },
 });
 
 export const UserModel = model('Users',userSchema)
