@@ -28,3 +28,16 @@ export const isValidPassword = (password, user) => bcrypt.compareSync(password, 
 export const createResponse = (res, statusCode, data) => {
     return res.status(statusCode).json({data})
 }
+/**
+ * Recibe la fecha de la ultima conexion y retorna un true si pasaron mas del tiempo estimado
+ * @param {*} lastConnectionDate usuario encontrado en base de datos.
+ * @returns boolean
+ */
+export const hasBeenMoreThanXTime = (lastConnectionDate) =>{
+    const dateNow = new Date()
+    const diffMs = dateNow - lastConnectionDate
+    const hours48Ms = 48 * 60 * 60 * 1000;
+    const minMs = 60 * 1000
+
+    return diffMs > hours48Ms;
+}

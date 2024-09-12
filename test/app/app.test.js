@@ -13,15 +13,17 @@ describe('Pruebas API de Productos', () => {
 
   // Antes de correr los tests, aseguramos que la colección de productos se limpie si ya existe
   beforeAll(async () => {
-    const collection = mongoose.connection.collections["products"];
+    const collection = mongoose.connection.collections["test"];
     if (collection) {
       await collection.drop();
     }
+    console.log(response.body);
   });
 
   // Test para crear un producto
   test('[POST] /test/test-createprod - Crear un nuevo producto', async () => {
     const newProduct = generateFakerProduct();
+    
 
     const response = await request(app)
       .post('/test/test-createprod') // Ruta actualizada según tu configuración

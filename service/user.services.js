@@ -2,7 +2,7 @@ import Services from "./class.services.js";
 import UserDaoMongo from "../persistence/daos/mongodb/user.dao.js";
 import jwt from "jsonwebtoken";
 import "dotenv/config";
-import { createHash, isValidPassword } from "../utils.js";
+import { createHash, hasBeenMoreThanXTime, isValidPassword } from "../utils.js";
 import CartDaoMongo from "../persistence/daos/mongodb/cart.dao.js";
 import UserRepository from "../persistence/repository/user.repository.js";
 import { sendMail } from "./mailling.services.js";
@@ -65,7 +65,9 @@ export default class UserService extends Services {
       if (!userExist) return null;
       const passValid = isValidPassword(password, userExist);
       if (!passValid) return null;
-      if (userExist && passValid) return this.generateToken(userExist);
+      if (userExist && passValid)
+        await this.updateLastConnection(userExist._id);
+         return this.generateToken(userExist);
     } catch (error) {
       throw new Error(error);
     }
@@ -102,6 +104,33 @@ export default class UserService extends Services {
     }
   }
 
+  async updateLastConnection(userId){
+    return await this.dao.update(userId,{
+      last_connection: new Date
+    });
+  }
+
+  async checkUserLastConnection(){
+    try {
+      const usersInactive = [];
+      const users = await this.dao.getAll();
+      if(users.lenght > 0){
+        for(const user of users){
+          user.last_connection && hasBeenMoreThanXTime(user.last_connection);{
+            console.log(`han pasado mas de 48hs desde la ultima conexion: ${user._id}`);
+              await this.dao.update(user_id);{
+                active: false
+              }
+              usersInactive.push(user)
+          }
+      }
+    }
+    return usersInactive;
+
+    } catch (error) {
+      throw new Error(error)
+    }
+  }
 };
 
 // import { UserModel } from "../daos/mongodb/models/user.model.js";

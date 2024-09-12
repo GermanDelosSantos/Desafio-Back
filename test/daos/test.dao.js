@@ -2,6 +2,7 @@
 import { describe, test, before } from "node:test";
 import assert from "node:assert";
 import { fakerES as faker } from "@faker-js/faker";
+import {initMongoDB} from '../../persistence/daos/mongodb/connection.js'
 import mongoose from "mongoose";
 import { logger } from "../logs/news.logs.js";
 import ProductDaoMongo from "../../persistence/daos/mongodb/product.dao.js";
@@ -14,7 +15,7 @@ const prodDao = new ProductDaoMongo();
 
 describe('conjunto de pruebas product dao', () => {
   before(async () => {
-    DaoMongo.init();
+    prodDao.init();
     await mongoose.connection.collections["test"].drop();
     logger.info("se limpio la base de datos");
   });

@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
-import 'dotenv/config'
+import config from '../../../config/config.js'
+import 'dotenv/config';
 import {logger} from "../../../logs/logger.js";
 const MONGO_URL = 'mongodb+srv://noiconuf:admin@cluster0.qu7hol7.mongodb.net/coderBack?retryWrites=true&w=majority&appName=Cluster0' 
 
