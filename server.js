@@ -39,7 +39,7 @@ const storeConfig = {
         // crypto: { secret: process.env.SECRET_KEY },
         ttl: 180,
     }),
-    secret: 'squirrel',
+    secret: process.env.SECRET_KEY,
     resave: true,
     saveUninitialized: true,
     cookie: { maxAge: 600000 }
