@@ -3,6 +3,7 @@ import passport from 'passport';
 import { isAuth } from "../midlewares/isAuth.js";
 import UserController from '../controllers/user.controllers.js';
 import { checkAuth } from '../midlewares/checkJwt.js';
+import { checkAdmin } from '../midlewares/checkAdmin.js';
 import { logger } from '../logs/logger.js'
 const controllers = new UserController();
 
@@ -10,7 +11,7 @@ const controllers = new UserController();
   const router = Router();
   router.post('/register', controllers.register);
 
-  router.get('/getall', controllers.getAll);
+  router.get('/getall',checkAdmin, controllers.getAll);
 
   router.post('/login', controllers.login);
   
@@ -21,7 +22,7 @@ const controllers = new UserController();
 
   router.put('/new-password', checkAuth, controllers.updatePass);
 
-  router.get('/', checkAuth, controllers.checkUsersLastConnection);
+  router.get('/', [checkAuth, checkAdmin], controllers.checkUsersLastConnection);
 
   router.get('/private', isAuth, (req, res)=>res.json({ msg: 'Ruta PRIVADA' }));
 
@@ -49,7 +50,10 @@ const controllers = new UserController();
   router.post('/resset-pass', checkAuth, controllers.generateResetPass)
 
   router.put('/change-role',checkAuth, controllers.changeUserRole);
+
+  router.delete('/inactive', [checkAuth, checkAdmin], controllers.deleteInactiveUsers);
   
   router.post('/logout',checkAuth, controllers.logout);
+
 
 export default router;

@@ -122,6 +122,21 @@ export default class UserController extends Controllers {
     }
   };
 
+  deleteInactiveUsers = async (req, res, next) => {
+    try {
+      const { timeLimit } = req.body;  // El límite de tiempo se enviará en la solicitud
+      const deletedUsers = await this.service.deleteInactiveUsers(timeLimit);
+      
+      if (deletedUsers.length === 0) {
+        return createResponse(res, 404, 'No inactive users found');
+      }
+      
+      return createResponse(res, 200, { message: 'Users deleted successfully', deletedUsers });
+    } catch (error) {
+      next(error);
+    }
+  };
+
   logout = async (req, res, next) => {
     try {
       const user = req.user;  

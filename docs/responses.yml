@@ -2,7 +2,7 @@ components:
   schemas:
     UserResponse:
       type: object
-      properties: 
+      properties:
         status:
           type: number
           description: Código de estado de la petición
@@ -15,7 +15,7 @@ components:
       example:
         status: 200
         message: Success
-        data: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGU1MzZhZjU5ZGM3ZDcwZTczZDhjYWMiLCJpYXQiOjE2OTMzOTMzODIsImV4cCI6MTY5MzM5NDI4Mn0.3t3rqyv_3CPzd6yNnJgPvifmw2IBvY0Il7eqc4Zgh_w    
+        data: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGU1MzZhZjU5ZGM3ZDcwZTczZDhjYWMiLCJpYXQiOjE2OTMzOTMzODIsImV4cCI6MTY5MzM5NDI4Mn0.3t3rqyv_3CPzd6yNnJgPvifmw2IBvY0Il7eqc4Zgh_w"
 
     UserProfileResponse:
       type: object
@@ -32,7 +32,50 @@ components:
       example:
         status: 200
         message: Success
-        data: data
+        data: {}
+
+    RoleChange:
+      type: object
+      required:
+        - userId
+        - newRole
+      properties:
+        userId:
+          type: string
+          description: ID del usuario cuyo rol se va a cambiar
+          example: "64e538fa59dc7d70e73d8cad"
+        newRole:
+          type: string
+          description: Nuevo rol del usuario (user/premium)
+          example: "premium"
+
+    InactiveUsersResponse:
+      type: object
+      properties:
+        status:
+          type: number
+          description: Código de estado de la respuesta
+          example: 200
+        message:
+          type: string
+          description: Mensaje de la respuesta
+          example: "Lista de usuarios inactivos obtenida con éxito"
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+
+    LogoutResponse:
+      type: object
+      properties:
+        status:
+          type: number
+          description: Código de estado de la respuesta
+          example: 200
+        message:
+          type: string
+          description: Mensaje de la respuesta
+          example: "Session closed successfully"
 
     ProductResponse:
       type: object
@@ -63,6 +106,20 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Product'
+
+    PremiumProductResponse:
+      type: object
+      properties:
+        status:
+          type: number
+          description: Código de estado de la respuesta
+          example: 201
+        message:
+          type: string
+          description: Mensaje de la respuesta
+          example: "Producto creado/eliminado con éxito"
+        data:
+          $ref: '#/components/schemas/Product'
 
     CartResponse:
       type: object
@@ -109,7 +166,7 @@ components:
           $ref: '#/components/schemas/Cart'
 
   securitySchemes:
-    BearerAuth: 
+    BearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT

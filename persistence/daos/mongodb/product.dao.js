@@ -8,14 +8,5 @@ export default class ProductDaoMongo extends MongoDao {
         super(ProductModel);
     }
 
-    static init() {
-        mongoose.set('strictQuery', true);
-        mongoose.connect(MONGO_URL, {
-            connectTimeoutMS: 300000
-        }, (err) => {
-            if(err) logger.fatal(err)
-            else logger.info('Conectado a MongoDB!')
-        });
-    }
 
 };

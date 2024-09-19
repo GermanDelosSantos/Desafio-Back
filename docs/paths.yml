@@ -35,7 +35,92 @@ paths:
           content: 
             application/json:
               schema: 
-                $ref: '#/components/responses/UserResponse'
+                $ref: '#/components/schemas/UserResponse'
+
+  /users/getall:
+    get:
+      tags:
+      - Users
+      summary: Obtiene la lista de todos los Usuarios
+      security:
+        -BearerAuth: []
+      responses:
+        '200':
+        description: Lista de Usuarios obtenida con exito
+        content:
+          application/json:
+            schema:
+            $ref: '#/components/schemas/UserResponse'
+      '500':
+        description: Error interno del servidor
+  
+  /users/:
+    get:
+      tags:
+      - Users
+      summary: Obtiene la lista de usuarios inactivos durante X tiempo
+      security:
+        -BearerAuth: []
+      responses:
+        '200':
+        description: Lista de Usuarios Inactivos obtenida con exito
+        content:
+          application/json:
+            schema:
+            $ref: '#/components/schemas/UserResponse'
+        '500':
+          description: Error interno del Servidor
+
+  /users/change-role:
+    put:
+      tags:
+        - Users
+      summary: Cambia el rol de un usuario (de user a premium y viceversa) 
+      security:
+        - BearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+                  description: Id del usuario cuyo rol será modificado
+                  example: '123asd543ugagsd7123hasdb'
+                newRole:
+                  type: string
+                  description: Nuevo rol del usuario (user/premium)
+                  example: 'premium'
+        required: true
+      responses:
+        '200':
+          description: Rol del usuario cambiado con éxito
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          description: Solicitud inválida o no tienes los privilegios
+        '500':
+          description: Error interno del servidor
+
+  /users/logout:
+    post:
+      tags:
+      - Users
+      summary: Cierra la sesión del usuario y destruye el token
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Sesión cerrada con éxito
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfileResponse'
+        '500':
+          description: Error interno del servidor
 
   /products:
     get:
@@ -50,7 +135,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProductListResponse'
+                $ref: '#/components/schemas/Product'
         '500':
           description: Error interno del servidor
     post:
@@ -158,6 +243,58 @@ paths:
           description: Producto no encontrado
         '500':
           description: Error interno del servidor
+
+  /products/premium:
+    post:
+      tags:
+      - Products
+      summary: Crea un producto si el usuario tiene el rol de premium
+      security:
+        - BearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+        required: true
+      responses:
+        '201':
+          description: Producto creado con éxito
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponse'
+        '403':
+          description: El usuario no tiene el rol adecuado para crear un producto
+        '500':
+          description: Error interno del servidor
+
+  /products/premium-delete/{id}:
+    delete:
+      tags:
+      - Products
+      summary: Elimina un producto creado por el usuario premium
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: ID del producto a eliminar
+      responses:
+        '200':
+          description: Producto eliminado con éxito
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponse'
+        '403':
+          description: El usuario no tiene permiso para eliminar este producto
+        '500':
+          description: Error interno del servidor
+
 
   /carts:
     get:

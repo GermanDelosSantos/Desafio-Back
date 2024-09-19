@@ -20,6 +20,12 @@ const createMsgReset = (first_name) => {
     </p>`;
 };
 
+const createMsgAccountDeletion = (first_name) =>
+  `<p>Hola ${first_name},</p>
+  <p>Tu cuenta ha sido eliminada debido a inactividad prolongada. Si tienes preguntas o deseas más información, por favor, contacta con nuestro equipo.</p>
+  <p>Saludos,</p>
+  <p>El equipo de Desbordadas</p>`;
+
 /**
  * 
  * @param {*} user 
@@ -33,20 +39,26 @@ export const sendMail = async (user, service, token = null) => {
 
     let msg = "";
 
-    service === "register"
-      ? (msg = createMsgRegister(first_name))
-      : service === "resetPass"
-      ? (msg = createMsgReset(first_name))
-      : (msg = "");
+    if (service === "register") {
+      msg = createMsgRegister(first_name);
+    } else if (service === "resetPass") {
+      msg = createMsgReset(first_name);
+    } else if (service === "accountDeletion") {
+      msg = createMsgAccountDeletion(first_name); 
+    } else {
+      msg = "";
+    }
 
     let subj = "";
 
-    subj =
-      service === "register"
-        ? "Bienvenido/a"
-        : service === "resetPass"
-        ? "Restablecimiento de contraseña"
-        : "";
+    
+    subj = service === "register"
+      ? "Bienvenido/a"
+      : service === "resetPass"
+      ? "Restablecimiento de contraseña"
+      : service === "accountDeletion"
+      ? "Cuenta eliminada por inactividad"
+      : "";
 
     const gmailOptions = {
       from: process.env.EMAIL_GMAIL,

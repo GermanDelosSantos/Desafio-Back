@@ -110,15 +110,15 @@ export default class UserService extends Services {
     });
   }
 
-  async checkUserLastConnection(){
+  async checkUsersLastConnection(){
     try {
       const usersInactive = [];
       const users = await this.dao.getAll();
-      if(users.lenght > 0){
+      if(users.length > 0){
         for(const user of users){
           user.last_connection && hasBeenMoreThanXTime(user.last_connection);{
             console.log(`han pasado mas de 48hs desde la ultima conexion: ${user._id}`);
-              await this.dao.update(user_id);{
+              await this.dao.update(user._id);{
                 active: false
               }
               usersInactive.push(user)
@@ -140,5 +140,33 @@ export default class UserService extends Services {
       throw new Error(error);
     }
   };
+
+  async deleteInactiveUsers(timeLimit) {
+    try {
+      const usersToDelete = [];
+      const users = await this.dao.getAll();
+      
+      if (users.length > 0) {
+        for (const user of users) {
+          if (user.last_connection && hasBeenMoreThanXTime(user.last_connection, timeLimit)) {
+            console.log(`Eliminando usuario inactivo: ${user._id}`);
+            
+            // Eliminar usuario
+            await this.dao.delete(user._id);
+
+            await sendMail(user, "accountDeletion");
+            
+            usersToDelete.push(user);
+          }
+        }
+      }
+
+      return usersToDelete;
+
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
 };
 
