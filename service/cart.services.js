@@ -15,19 +15,6 @@ export default class CartServices extends Services {
   }
 
 
-  // addProdToCart = async (cartId, prodId) => {
-  //   try {
-  //     const existCart = await this.getById(cartId);
-  //     if (!existCart) return null;
-  
-  //     const existProd = await prodDao.getById(prodId);
-  //     if (!existProd) return null;
-
-  //     return await this.dao.addProdToCart(cartId, prodId);
-  //   } catch (error) {
-  //     throw new Error(error);
-  //   }
-  // };
 
   addProdToCart = async (cartId, prodId, userEmail) => {
     try {

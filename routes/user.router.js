@@ -50,6 +50,6 @@ const controllers = new UserController();
 
   router.put('/change-role',checkAuth, controllers.changeUserRole);
   
-  // router.post('/logout', controllers.logout);
+  router.post('/logout',checkAuth, controllers.logout);
 
 export default router;

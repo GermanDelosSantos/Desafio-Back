@@ -104,7 +104,7 @@ export default class UserController extends Controllers {
       }
 
       user.role = newRole;
-      await user.save(); // Esto debe funcionar si `user` es una instancia del modelo Mongoose
+      await user.save(); 
 
       res.status(200).json({ message: 'Rol actualizado correctamente', user });
     } catch (error) {
@@ -117,6 +117,19 @@ export default class UserController extends Controllers {
     try {
       const response = await this.service.checkUsersLastConnection();
       return createResponse(res, 200, response);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  logout = async (req, res, next) => {
+    try {
+      const user = req.user;  
+      if (!user) return httpResponse.Unauthorized(res, "No user logged in");
+
+      await this.service.logout(user._id);
+      res.clearCookie('token');  
+      return httpResponse.Ok(res, { message: 'Logout successful' });
     } catch (error) {
       next(error);
     }
