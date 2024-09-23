@@ -71,6 +71,7 @@ app.use('/carts', cartRouter);
 app.use('/products', productRouter);
 app.use('/users', userRouter);
 app.use('test', testRouter);
+app.use('/',(req,res) => res.send('Home Page Desbordadas'))
 
 const viewsRouter = createViewsRouter();
 
