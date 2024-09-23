@@ -15,7 +15,7 @@ export default class UserDao extends MongoDao {
 }
 async getUserById(id){
   try {
-      return await this.model.findById(id).populate("carts"); 
+      return await this.model.findById(id).populate("cart"); 
   } catch (error) {
       throw new Error(error)
   }

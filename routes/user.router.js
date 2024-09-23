@@ -11,14 +11,11 @@ const controllers = new UserController();
   const router = Router();
   router.post('/register', controllers.register);
 
-  router.get('/getall',checkAdmin, controllers.getAll);
+  router.get('/getall', [checkAuth, checkAdmin] , controllers.getAll);
 
   router.post('/login', controllers.login);
   
-  router.get("/current", checkAuth, (req, res) => {
-    const user = req.user.toObject();
-    res.render("profile", { user });
-  });
+  router.get("/current", checkAuth, controllers.profile);
 
   router.put('/new-password', checkAuth, controllers.updatePass);
 

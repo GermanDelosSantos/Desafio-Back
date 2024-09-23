@@ -136,6 +136,18 @@ export default class UserController extends Controllers {
       next(error);
     }
   };
+  
+  profile =async(req, res, next)=>{
+    try {
+     if(req.user){
+      const { _id } = req.user;
+      const user = await this.service.getUserById(_id);
+      createResponse(res, 200, user)
+     } else createResponse(res, 401, { msg: 'Unhautorized' })
+    } catch (error) {
+      next(error);
+    }
+  };
 
   logout = async (req, res, next) => {
     try {
