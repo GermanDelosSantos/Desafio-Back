@@ -9,6 +9,11 @@ export const info = {
         servers: [  
             {
                 url: 'http://localhost:8080/'
+            },
+            {
+
+                url: 'https://desbordadasbackend.vercel.app/'
+
             }
         ]
     },
