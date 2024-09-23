@@ -6,7 +6,7 @@ const controller = new ProductController();
 
 const router = Router();
 
-router.get('/', [checkAuth], controller.getAll);
+router.get('/', controller.getAll);
 
 router.get('/:id', [checkAuth], controller.getById);
 
