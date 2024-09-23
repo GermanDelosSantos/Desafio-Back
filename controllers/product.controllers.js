@@ -51,4 +51,24 @@ export default class ProductController extends Controllers {
       next(error);
     }
   };
+
+  updatePremium = async (req, res, next) => {
+    try {
+      const {product} = req.params;
+      const {user} = req.user;
+
+      if (!product) {
+        return res.status(404).json({ message: 'Producto no encontrado' });
+      }
+
+      if (user.role !== 'admin' && product.owner !== user.email) {
+        return res.status(403).json({ message: 'No tienes permiso para actualizar este producto' });
+      }
+
+      await prodService.updatePremium();
+      res.status(200).json({ message: 'Producto actualizado' });
+    } catch (error) {
+      next(error);
+    }
+  };
 };

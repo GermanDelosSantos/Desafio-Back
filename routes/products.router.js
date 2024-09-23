@@ -8,7 +8,7 @@ const router = Router();
 
 router.get('/', controller.getAll);
 
-router.get('/:id', [checkAuth], controller.getById);
+router.get('/:id', controller.getById);
 
 router.post('/', [checkAuth, checkAdmin], controller.create);
 
@@ -16,7 +16,7 @@ router.post('/premium', [checkAuth], controller.createProductPremium);
 
 router.post('/mockingproducts', [checkAuth, checkAdmin], controller.createProductsMock);
 
-router.put('/:id', [checkAuth, checkAdmin], controller.update);
+router.put('/:id', checkAuth, controller.updatePremium);
 
 router.delete('/:id', [checkAuth, checkAdmin], controller.delete);
 

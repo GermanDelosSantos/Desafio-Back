@@ -63,4 +63,25 @@ export default class ProductService extends Services {
     }
   };
 
+  updatePremium = async (req, res) =>{
+    try {
+      const product = await prodDao.findById(req.params._id);
+      const user = await userDao.findById(req.user._id);
+  
+      if (!product) {
+        return res.status(404).json({ message: 'Producto no encontrado' });
+      }
+  
+      if( user.role !== 'premium' && product.owner !== user.mail){
+        return res.status(403).json({ message : 'No eres el creador del producto o no tienes permiso para hacerlo'})
+      }
+      await product.update()
+      res.status(200).json({ message: 'Producto actualizado con exito'})
+    } catch (error) {
+      res.status(500).json({ message: 'Error al actualizar el producto' });
+
+    }
+
+  }
+
 };
